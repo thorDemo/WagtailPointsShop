@@ -1,0 +1,43 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailuserbar %}
+{% load wagtailcore_tags %}
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+
+</head>
+<body>
+<div>
+    <div class="lg-bg">
+        <div class="lg-logo"><img src="{% static 'images/login-logo.png' %}" alt=""/></div>
+        <div>
+            <form id="ajaxForm" class="login-form" action="/accounts/login/" method="post">
+                {% csrf_token %}
+                <div>
+                    <div class="field username_field">
+                        用户名&nbsp;&nbsp;&nbsp;&nbsp;<input id="usertxt" type="text" placeholder="请输入用户名" name="username"/>
+                    </div>
+                    <div class="field password_field">
+                        密码<input id="pwdtxt" type="password" placeholder="请输入密码" name="password"/>
+                    </div>
+                    <!--登录按钮-->
+                    <div class="login_bt">
+                        <input type="submit" style="border: none;height: 58px;width: 360px; background: url('{% static 'images/login-button.png' %}');" value="">
+                    </div>
+                    <div class="Error_prompt" style="display: block; ">
+                        <span>首次登陆请联系客服获取密码</span>
+                        <span >{{ message }}</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

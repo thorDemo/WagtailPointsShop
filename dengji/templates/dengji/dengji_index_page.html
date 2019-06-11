@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static wagtailuserbar %}
+{% load wagtailcore_tags %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/rules.css' %}">
+{% endblock %}
+
+{% block type_list %}
+    <a href="/">首页</a>
+    {% for post in brother %}
+        {% if self.title == post.title %}
+            <a href="{% pageurl post %}" class="active">{{ post.title }}</a>
+        {% else %}
+            <a href="{% pageurl post %}">{{ post.title }}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <!--中间条款主题  start -->
+    <div style="width: 1000px;margin: 0 auto">
+        <div class="rulepic"><img src="{% static 'images/dengji_title.png'%}" alt=""></div>
+        <div class="rulepic"><span class="jfspan1">{{ change }}投注额 = <span style="font-size: 24px">1</span> 个积分</span> <span class="jfspan2">天天赚积分，升等级越块 折扣越多！</span></div>
+        <!--条款内容start -->
+        <div class="jifenbox">
+            <table class="jifentable">
+                <tr style="border-bottom: none" class="tbfirsttr">
+                    <th>等级</th>
+                    <th>积分兑换折扣</th>
+                    <th>升级条件</th>
+                </tr>
+                {% for line in data %}
+                    <tr>
+                        <td class="paiminglist"><img src="/static/images/level/{{ forloop.counter }}.png" alt=""></td>
+                        <td>{{ line.level }}</td>
+                        <td>单月累积<span style="color: #fec45d">{{ line.points }}</span>个积分，同时完成<span style="color: #fec45d">{{ line.water }}</span>的流水</td>
+                    </tr>
+                {% endfor %}
+
+
+            </table>
+        </div>
+                <!--条款内容end -->
+    </div>
+    <!--中间条款主题end -->
+
+{% endblock %}

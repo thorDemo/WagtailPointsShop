@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+{% load static wagtailuserbar %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block type_list %}
+    <a href="/" class="active">首页</a>
+    {% for post in page.get_children %}
+        <a href="{% pageurl post %}">{{ post.title }}</a>
+    {% endfor %}
+{% endblock %}
+
+{% block banner %}
+    <div>
+        <img class="img-responsive" src="{% static 'picture/banner.jpg' %}" style="max-width: 100%;min-height:280px">
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <!--轮播-->
+        <div class="lunbo">
+            <!--轮播图片文字积分详情 start-->
+            <div class="lunbo-bg" style="margin: 0 auto">
+                <!--左-->
+                <div class="box">
+                    <ul id="marquee" style="margin-bottom: 0; overflow: hidden;">
+                        {% for post in children %}
+                        <li>
+                            <!--图片-->
+                            {% image post.image width-400 as photo %}
+                            <div class="lunbo-pic"><img src="{{ photo.url }}" alt="{{ photo.alt }}"/></div>
+                            <!--文字积分-->
+                            <div class="lunbo-des">
+                                <div class="lunbo-des1">
+                                    <p>{{ post.title }}</p>
+                                    <div style="margin-top: 25px;font-size: 14px;font-weight: bold;color: #5f0000">
+                                        积分<p style="display: inline;font-size: 20px"> {{ post.points }}</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!--右-->
+                <script type="text/javascript">
+                    $(function(){
+					$(".box").scroll();
+				});
+                </script>
+            </div>
+
+            <!--轮播图片文字积分详情 end-->
+        </div>
+
+        <!--轮播图片文字积分详情 end-->
+        <!--分类导航-->
+        <div class="class-pic">
+            {% for post in sort %}
+                {% image post.home_image width-470 as photo %}
+                <div><a href="{{ post.url }}"><img src="{{ photo.url }}" alt="{{ photo.alt }}"/></a></div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static 'js/pro.js' %}"></script>
+{% endblock %}

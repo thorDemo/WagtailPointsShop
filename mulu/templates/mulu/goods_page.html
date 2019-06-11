@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailuserbar %}
+{% load wagtailcore_tags %}
+
+{% block type_list %}
+    <a href="/">首页</a>
+    {% for post in parents %}
+        {% if post.title == '礼品目录' %}
+            <a href="{% pageurl post %}" class="active">{{ post.title }}</a>
+        {% else %}
+            <a href="{% pageurl post %}">{{ post.title }}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="change-detail">
+        <!--表单顶部标题-->
+        <div style="text-align:center;margin: 0 auto;padding:20px 0"><img src="{% static 'images/title.png' %}" alt=""/></div>
+        <!--兑换信息说明-->
+        <div class="change-text">
+            <!--左边商品图展示-->
+            {% image page.image width-400 as tmp_photo %}
+            <img src="{{ tmp_photo.url }}" alt="{{ tmp_photo.alt }}" style="width: 400px;height: 400px;float: left;"/>
+            <!--右边商品详情和温馨提示-->
+            <div class="change-text-right">
+                <div class="change-text-right1">
+                    <img src="{% static 'picture/ct_icon.png' %}" alt="" style="float: left"/>
+                    <p style="font-size: 15px;font-weight: bolder;vertical-align: middle">&nbsp;&nbsp;您要兑换的商品是</p>
+                    <p style="margin: 13px 0 13px 0;font-weight: bolder;font-size: 23px">{{ page.title }}</p>
+                    <div style="padding-bottom: 10px">
+                        <span style="font-size: 15px;font-weight: bolder;vertical-align: middle">商品积分：{{ page.points }}</span>
+                        <span style="font-size: 15px;font-weight: bolder;vertical-align: middle">&nbsp;&nbsp;&nbsp;折扣价:</span>
+                        <span style="color: red;font-size: 15px;font-weight: bolder;vertical-align: middle">{{ discount_points }}</span>
+                        <span style="color: red;font-size: 15px;vertical-align: middle">({{ discount }})</span>
+                    </div>
+                    <p style="color: red">{{ message }}</p>
+                    <p>*请您务必填写真实有效信息</p>
+                    <p>*兑换投注额，我们将在您提交申请后15分钟内处理</p>
+                    <p>*兑换礼品我们将在您提交后的15分钟内与您联系核实地址</p>
+                    <p>*有任何问题请及时联系我们的客服，我们将24小时为您服务</p>
+                    <a class="zxkf" href="https://bmw-chat-service.com/?wgPortal=VONFpjLZtk" target="_blank">在线客服</a>
+                    <a class="cjyw" href="http://www.bmw1984.com/yiwen/" target="_blank">常见疑问</a>
+                </div>
+            </div>
+        </div>
+        <!--填写表单-->
+        <div class="change-sub">
+            <!--左侧表单填写-->
+            <div class="form-left">
+                <form action="/order/" method="post" >
+				{% csrf_token %}
+				<input type="text" name="Goods" value="{{ page.title }}" title="" style="display: none">
+                    <input type="text" name="GoodsID" value="{{ page.id }}" title="" style="display: none">
+                    <input type="text" name="Real" value="{{ page.points }}" title="" style="display: none">
+                    <input type="text" name="Image" value="{{ page.image_id }}" title="" style="display: none">
+                    <input type="text" name="Discount" value="{{ discount }}" title="" style="display: none">
+                    <input type="text" name="Cost" value="{{ discount_points }}" title="" style="display: none">
+                    <div style="float: right"><p class="warnuser">*</p><p style="color: #ffffff">为必填</p></div>
+                    <div style="padding-top: 40px;margin-bottom: 10px;width: 530px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 60px">姓 名</p><input type="text" placeholder="请输入姓名" name="Name" id="f1" class="un" required/>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 45px">用 户 名</p><input type="text" placeholder="{{ user.username }}" name="" readonly="readonly" id="f2" required/>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 60px">邮 箱</p><input type="email" placeholder="请输入邮箱地址" name="Email" id="f3" required/>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 60px">电 话</p><input type="text" placeholder="请输入电话" name="Phone" id="f4" pattern="[0-9]{11}" title="请输入11位数的手机号码" required/>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 45px">微 信 号</p><input type="text" placeholder="请输入微信号" name="WeChart" id="f5" required/>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 40px">邮寄地址</p><input type="text" placeholder="请输入邮寄地址" name="Address" id="f6" required/>
+                    </div>
+                    <div style="margin-bottom: 10px;height: 100px">
+                        <p class="warnuser" style="padding-right: 29px"></p>
+                        <p style="color: #fec45d;padding-right: 60px;display:inline-block;vertical-align:middle;margin-bottom: 90px">备 注</p>
+                        <textarea class="form-size" name="Tips" id="" cols="30" rows="10" placeholder="   如有额外说明，请填写"></textarea>
+                    </div>
+                    <div class="form-bt">
+                    	{% if message %}
+                            <button type="submit" disabled="disabled">提交</button><button type="reset">清除</button>
+                        {% else %}
+                            <button type="submit">提交</button><button type="reset">清除</button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+            <!--右侧大图-->
+            <div class="form-right"><img src="{% static 'images/banner.jpg' %}" alt="" style="width: 270px"/></div>
+        </div>
+    </div>
+
+
+{% endblock %}

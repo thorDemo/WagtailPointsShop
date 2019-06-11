@@ -1,0 +1,128 @@
+body{
+	min-width:1000px;
+}
+*{
+    font-size: 12px; 
+    font-family: Tahoma, Arial, Helvetica, simsun, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+a:hover{text-decoration: none}
+li{list-style: none;}
+/*顶部logo和表单布局*/
+.head{
+    margin: 0 auto;
+    width: 1000px;
+    height: 173px;
+}
+#bg-head{
+    background: url(../images/header-pattern.jpg);
+    z-index: 1030;
+}
+.headtop{
+    width: 100%;
+    height: 10.5rem;
+    
+}
+.left{
+    position: relative;
+    top: 3rem;
+    right: 2rem;
+    width: 12rem;
+}
+.right{
+    margin: -40px 0 0 0;
+    height: 100px;
+    width: 355px;
+    float: right
+}
+.left a{
+    display: block;
+    background: url(../images/logo.png) no-repeat;
+    height: 5rem;
+}
+
+.head1{
+    width: 100%;
+    max-width: 1260px;
+    min-width: 960px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+/*顶部右侧表单*/
+.right input{
+    width:180px;
+    height:3.1rem;
+    border:0.5px solid #ffc45d;
+    margin-right:5px;
+    background:#5f0000;
+    color:white;
+}
+.search{
+    background: url(../images/index_ss.png) no-repeat;
+    color: white;
+    border: 0;
+    width: 113px;
+    height: 3.1rem;
+    padding: 0;
+    
+}
+.right input:focus{
+    outline:none;
+    border:1px solid #ffc45d;
+}
+
+.online{
+    background: url(../images/index_zxkf.png) no-repeat;
+    color: white;
+    border: 0;
+    width: 113px;
+    height: 38px;
+}
+/*登录logo*/
+.logo-icon{
+    width: 77px;
+    height: 80px;
+    float: right;
+    align-content: center;
+
+}
+.logo-icon a{
+    text-align: center;
+    color: #fec45d
+}
+.logo-icon img{
+    line-height: 80px;
+    margin: 0 0 7px 23px;
+}
+.logo-icon p{
+    padding-left: 16px;
+    color: #fec45d;
+    margin: 0 !important;
+}
+/*导航栏*/
+.nav11{
+    width: 1000px;
+    height: 46px;
+    display:-webkit-flex;
+    display:flex;
+    font-size: 12rem;
+}
+.nav11 a{
+    -webkit-flex:1;
+    flex:1;
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.15rem;
+    text-decoration:none;
+    height: 46px;
+    line-height: 46px;
+}
+.nav11 a:hover{
+    text-decoration:none;
+    color: #fff;
+}
+.active{
+    background-color:#bb8a35;
+}

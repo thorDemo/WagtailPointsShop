@@ -1,0 +1,143 @@
+{% load static wagtailuserbar %}
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>
+        {% block title %}
+            {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+        {% endblock %}
+        {% block title_suffix %}
+            {% with self.get_site.site_name as site_name %}
+                {% if site_name %}- {{ site_name }}{% endif %}
+            {% endwith %}
+        {% endblock %}
+    </title>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="shortcut icon " type="images/x-icon" href="{% static 'favicon.ico' %}">
+    {# 全局 stylesheets #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/head.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/foot.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bmw.css' %}">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    {% block extra_css %}
+        {# Override this in templates to add extra stylesheets #}
+    {% endblock %}
+</head>
+<body bgColor="transparent">
+<div id="bg-head">
+    <div class="head">
+        <div class="headtop">
+            <!-- 顶部左侧logo -->
+            <div class="left" style="padding: 0">
+                <h1><a href="#" id="logo"></a></h1>
+            </div>
+            <!-- 顶部右侧表单 -->
+            <div class="right">
+                <!-- 搜索 -->
+                <form role="form" class="form-inline" style="width: 278px;position: absolute;display:none;">
+                    <div class="form-group" style="margin: 0;width:13.17rem">
+                        <input type="text" class="form-control" id="name" placeholder="请输入用户名" style="width: 13.17rem">
+                    </div>
+
+                    <div class="form-group" style="margin-left: 0.5rem;height: 3.1rem">
+                        <button type="submit" class="search"></button>
+                    </div>
+
+                    <!-- 选择日期 -->
+                    <div class="sel-date" style="width: 13.17rem;margin-top: 0.5rem">
+                        <select name="date" id="date" style="width: 13.17rem; height:3.1rem;" title="">
+                            <option value="1" style="color:#000000">今天</option>
+                            <option value="2" style="color:#000000">昨天</option>
+                            <option value="3" style="color:#000000">近一周</option>
+                            <option value="4" style="color:#000000">近一月</option>
+                            <option value="5" style="color:#000000">近一年</option>
+                        </select>
+                    </div>
+                    <a href="https://www.bmw882.net" target="_blank"
+                       style="margin-left: 0.5rem;margin-top: 0.5rem;height: 3.1rem">
+                        <div class="online"></div>
+                    </a>
+                </form>
+                <div class="logo-icon">
+                    <img src="{% static 'images/login.png' %}" alt=""/>
+                    {% if user.username %}
+                        <a href="/accounts/"><p>{{ user.username }}</p></a>
+                        <a href="/accounts/logout/"><p>[退出登录]</p></a>
+                    {% else %}
+                        <a href="/accounts/form/"><p>登录</p></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 顶部导航栏 -->
+        <div style="border-top: 1px solid #671e02;"></div>
+        <nav class="nav11">
+            {% block type_list %}{% endblock %}
+        </nav>
+
+        <script type="text/javascript">
+            $(function () {
+                // 点击元素添加class 移除其他元素class
+                $(".nav11 a").click(function () {
+                    $(this).addClass("active");
+                    $(this).siblings().removeClass("active");
+                });
+            });
+        </script>
+    </div>
+
+
+    <div class="bgImg">
+        {% block banner %}{% endblock %}
+
+        {% block content %}{% endblock %}
+
+        <!-- 底部 -->
+        <div class=""
+             style="width: 100%;height:300px;background-color: #262626;opacity: 0.8;margin: 0;padding: 0;max-width: 100%;">
+            <div class="hezuo">
+                <div id="pic" class="line">
+                    <div class="bp"><b style="font-size: 17px">宝马会合作伙伴</b></div>
+                    <img src="{% static 'picture/bbin.png' %}" class="img-responsive">
+                    <img src="{% static 'picture/mg.png' %}" class="img-responsive">
+                    <img src="{% static 'picture/one.png' %}" class="img-responsive">
+                    <img src="{% static 'picture/ob.png' %}" class="img-responsive">
+                    <img src="{% static 'picture/dfjt.png' %}" class="img-responsive">
+                    <img src="{% static 'picture/footer_icon.png' %}" class="img-responsive dif">
+                </div>
+
+                <div class="line">
+                    <div class="bp"><b style="font-size: 17px">宝马会积分俱乐部</b></div>
+                    <img src="{% static 'picture/weibo_off.gif' %}" class="img-responsive jlb">
+                    <img src="{% static 'picture/qqblog_off.gif' %}" class="img-responsive jlb">
+                    <img src="{% static 'picture/wordpress_off.gif' %}" class="img-responsive jlb">
+                    <img src="{% static 'picture/gli_off.gif' %}" class="img-responsive jlb">
+                    <img src="{% static 'picture/payouts_reviewed_off.gif' %}" class="img-responsive jlb">
+                    <img src="{% static 'picture/itech_labs_off.gif' %}" class="img-responsive jlb">
+                    <img src="{% static 'picture/godadd_ssl_off.gif' %}" class="img-responsive jlb dif1">
+                </div>
+            </div>
+            <div style="border-bottom: 1px solid #888;width: 100%;margin: 0;padding: 0"></div>
+            <div class="bottom-text"><b>&copy;2019 宝马会积分俱乐部 版权所有 | 18+</b></div>
+        </div>
+
+    </div>
+
+    {% wagtailuserbar %}
+    {# 全局 javascript #}
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+
+    {% block extra_js %}
+        {# Override this in templates to add extra javascript #}
+    {% endblock %}
+</div>
+</body>
+
+</html>

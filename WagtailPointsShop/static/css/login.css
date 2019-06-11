@@ -1,0 +1,73 @@
+input:-webkit-autofill { box-shadow: 0 0 0 1000px transparent inset !important;}
+body{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    background: url("../images/login-bg.png");
+    height: 100%;
+    width: 100%;
+}
+.lg-bg{
+    width: 420px;
+    height: 400px;
+    background: url("../images/login-bgk.png");
+    position:absolute;
+    left:0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+}
+.lg-logo{
+    width: 224px;
+    height: 69px;
+    position:relative;
+    left:0;
+    top: -35px;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+}
+.login_bt{
+    width: 360px;
+    height: 58px;
+    margin: auto;
+}
+.field{
+    margin: 40px;
+    color: #d8d8d8;
+    height: 42px;
+}
+.field input{
+    background-color: transparent;
+    border: none;
+    width:270px;
+    height: 40px;
+    color: #d8d8d8;
+	float: right;
+}
+.field input:focus{
+    /*border: 1px solid #626262;*/
+    outline: none;
+    /*box-shadow: 0 0 1px #ffdd5d;*/
+    /*-moz-box-shadow:0 0 5px #ffdd5d;*/
+    /*-webkit-box-shadow: 0 0 5px #ffdd5d;*/
+}
+input.custom {
+
+}
+.password_field input{
+    margin-left: 28px;
+}
+.Error_prompt{
+    display: none;
+    margin: 6px auto;
+    width: 360px;
+    height: 56px;
+    line-height: 56px;
+    color: #ff0f0f;
+    text-align: center;
+    border-radius: 6px;
+}

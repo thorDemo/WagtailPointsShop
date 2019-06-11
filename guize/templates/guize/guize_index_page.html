@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+{% load static wagtailuserbar %}
+
+{% block type_list %}
+    <a href="/">首页</a>
+    {% for post in brother %}
+        {% if self.title == post.title %}
+            <a href="{% pageurl post %}" class="active">{{ post.title }}</a>
+        {% else %}
+            <a href="{% pageurl post %}">{{ post.title }}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <!--中间条款主题  start -->
+    <div class="rule">
+        <div class="rulepic"><img src="{% static 'images/guize_title.png' %}" alt=""></div>
+
+        <!--条款内容start -->
+        <div class="rulebox">
+            <ul>
+                {% for post in page.get_children %}
+                    <li>
+                        <div>
+                            <div class="xuhao">{{ forloop.counter }}</div>
+                        </div>
+                        <p class="rulebigllist">
+                            {{ post.specific.description }}
+                        </p>
+                    </li>
+                {% endfor %}
+
+                <li>
+                    <hr>
+                </li>
+
+                <li>
+                    <div>
+                        <div class="xuhao" style="opacity: 0">7</div>
+                    </div>
+                    <p class="rulebigllist">还有任何问题？宝马会欢迎您随时联系 <a href="https://bmw-chat-service.com/?wgPortal=VONFpjLZtk" target="_blank" class="zxkefu">在线客服</a></p>
+                </li>
+            </ul>
+        </div>
+        <!--条款内容end -->
+
+    </div>
+    <!--中间条款主题end -->
+
+{% endblock %}

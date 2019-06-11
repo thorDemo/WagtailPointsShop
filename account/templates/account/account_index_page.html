@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load static wagtailuserbar %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bmw.css' %}">
+{% endblock %}
+
+{% block type_list %}
+    <a href="/">首页</a>
+    {% for post in brother %}
+        {% if self.title == post.title %}
+            <a href="{% pageurl post %}" class="active">{{ post.title }}</a>
+        {% else %}
+            <a href="{% pageurl post %}">{{ post.title }}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div style="margin: 0 auto;padding: 20px 0;text-align: center"><img src="{% static 'images/zhzx.png' %}" alt=""/>
+    </div>
+    <div class="zhzx-details">
+        <!--左边账户登记-->
+        <div class="zhzx-left">
+            <div class="zhzx-left-1">
+                <p class="username">{{ user.username }}</p>
+                {% if vip == '0' %}
+                <img style="padding: 20px 0" src="{% static 'images/icon.png' %}" alt=""/>
+                {% else %}
+                <img style="padding: 20px 0" src="{% static 'images/vip.png' %}" alt=""/>
+                {% endif %}
+                <div style="text-align: center;display: inline-block"><p class="usertxt">当前会员等级 &nbsp;{{ level }}&nbsp;&nbsp;</p>
+                    <p class="userlevel">Lv.{{ level }}</p></div>
+                <div style="text-align: center;height: 45px;margin: 10px 0"><p class="restxt">剩余积分</p>
+                    <p class="res-value">&nbsp;{{ current_points }}</p></div>
+                <div style="border: 0.1rem solid #c8c9ca;transform: scaleY(0.2);margin: 15px 0"></div>
+
+                <div class="upgrade"><p>升级条件：</p>
+                    {% if up_need == -1 %}
+                        <p></p>
+                        <p class="upgrade-value">已经达到最高等级</p>
+                        <p></p>
+                    {% else %}
+                    <p>30天内赚</p>
+                    <p class="upgrade-value">{{ up_need }}</p>
+                    <p>个积分</p>
+                    {% endif %}
+
+                </div>
+                <p></p>
+            </div>
+        </div>
+        <!--右边账户订单详情-->
+        <div class="zhzx-right">
+            <div class="zhzx-right-nav">
+                <p>订单资讯</p>
+                <p>日期</p>
+                <p>订单状态</p>
+            </div>
+            <div class="zhzx-right-subject">
+                <!--手风琴下拉菜单商品详情-->
+                <ul class="cd-accordion-menu animated">
+                    {% for post in orders %}
+
+                        <li class="has-children">
+                            <div class="zhzx-right-status">
+                                {% if post.status == '0' %}
+                                    <p class="chuli">{{ post.goods }}</p>
+                                    <p class="chuli">{{ post.create_time }}</p>
+                                    <p class="waiting-status">待确认</p>
+                                {% elif post.status == '1' %}
+                                    <p class="chuli">{{ post.goods }}</p>
+                                    <p class="chuli">{{ post.create_time }}</p>
+                                    <p class="sending-status">待发货</p>
+                                {% elif post.status == '2' %}
+                                    <p class="chuli">{{ post.goods }}</p>
+                                    <p class="chuli">{{ post.create_time }}</p>
+                                    <p class="sending-status">配送中</p>
+                                {% elif post.status == '3' %}
+                                    <p>{{ post.goods }}</p>
+                                    <p>{{ post.create_time }}</p>
+                                    <p>已送达</p>
+                                {% elif post.status == '4' %}
+                                    <p>{{ post.goods }}</p>
+                                    <p>{{ post.create_time }}</p>
+                                    <p>已取消</p>
+                                {% endif %}
+                            </div>
+                            <div class="zhzx-right-details" style="display: none;">
+                                {% image post.image width-400 as tmp_photo %}
+                                <img src="{{ tmp_photo.url }}"
+                                     style="width: 143px;height: 143px;float: left;" alt="{{ tmp_photo.alt }}"/>
+                                <div style="width: 497px;height: 143px;padding: 20px 0 20px 40px;float: left;">
+                                    <div class="zhzx-right-details-txt"><p>订单编号 |&nbsp;</p>
+                                        <p>{{ post.id }}</p></div>
+                                    <div class="zhzx-right-details-txt"><p>花费积分 |&nbsp;</p>
+                                        <p>{{ post.cost }}</p></div>
+                                    <div class="zhzx-right-details-txt"><p>配送地址 |&nbsp;</p>
+                                        <p>{{ post.address }}</p></div>
+                                    <div class="zhzx-right-details-txt"><p>收货人 |&nbsp;</p>
+                                        <p>{{ post.take_name }}</p></div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <!--订单详情页码 start-->
+                <div class="subject-yema">
+                    <ul>
+                        {% if orders.has_previous %}
+                            <li><a href="?page={{ orders.previous_page_number }}" style="color:white;display:inline-block;width:40px;height:40px"></a></li>
+                        {% endif %}
+                        {% for page_num in orders.paginator.page_range %}
+                            <li><a href="?page={{ page_num }}" style="color:white;display:inline-block;width:40px;height:40px">{{ page_num }}</a></li>
+                        {% endfor %}
+                        {% if orders.has_next %}
+                            <li><a href="?page={{ orders.next_page_number }}" style="color:white;display:inline-block;width:40px;height:40px"></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+				<!--订单详情页码 end-->
+				<style type="text/css">
+					.subject-yema li:nth-child({{ num }}) {
+						background: url("{% static 'picture/focus.png' %}");
+					}
+					{% if orders.has_previous %}
+					.subject-yema li:first-child {
+						background: url("{% static 'picture/pre.png' %}");
+					}
+					.subject-yema li:first-child:hover {
+						background: url("{% static 'picture/focus-pre.png' %}");
+					}
+					{% endif %}
+					{% if orders.has_next %}
+					.subject-yema li:last-child {
+						background: url("{% static 'picture/next.png' %}");
+					}
+					.subject-yema li:last-child:hover {
+						background: url("{% static 'picture/focus-next.png' %}");
+					}
+					{% endif %}
+				</style>
+                <!--订单详情底部联系客服-->
+                <div class="zhzx-right-bottom">
+                    <p style="display: inline-block;color: #d8d8d8">还有任何问题？宝马会欢迎您随时联系</p> <a href="https://bmw-chat-service.com/?wgPortal=VONFpjLZtk" target="_blank">在线客服</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        //        点击元素展开下拉，其他子元素隐藏，再次点击该元素隐藏下拉
+        $(function () {
+            $(".has-children").click(
+                function () {
+                    //获取需要点击元素的子元素的属性值
+                    var i = $(this).children(".zhzx-right-details").attr("style");
+                    //判断：如果当前点击元素的子元素的属性值为none，则将其属性值改为block，反之...
+                    if (i == "display: none;") {
+                        $(this).children(".zhzx-right-details").css("display", "block");//修改点击元素的子元素的属性值
+                        $(this).siblings().children(".zhzx-right-details").css("display", "none");//其他子元素的属性值为初始值
+                    } else {
+                        $(this).children(".zhzx-right-details").css("display", "none");
+                        $(this).siblings().children(".zhzx-right-details").css("display", "none")
+                    }
+                }
+            )
+        })
+
+    </script>
+
+{% endblock %}
+
+{% block extra_js %}
+    <!-- js 引入 --!>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static wagtailuserbar %}
+{% load wagtailcore_tags %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/rules.css' %}">
+{% endblock %}
+
+{% block type_list %}
+    <a href="/">首页</a>
+    {% for post in parent %}
+        {% if self.title == post.title %}
+            <a href="{% pageurl post %}" class="active">{{ post.title }}</a>
+        {% else %}
+            <a href="{% pageurl post %}">{{ post.title }}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <!--中间条款主题  start -->
+    <div class="rule">
+        <!--常见问题title-->
+        <div class="rulepic"><img src="{% static 'images/yiwen_title.png'%}" alt=""></div>
+        <!--左边选项list-->
+        <div id="propblemleftlist">
+            <ul>
+                {% for post in brother %}
+                    <li class="pbliftli"><a href="{{ post.url }}" style="color: white">{{ post.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <script>
+            $(function () {
+                $(".pbliftli").click(
+                    function () {
+                        $(this).addClass("test");
+                        $(this).removeClass("pbliftli");
+                        $(this).siblings().removeClass("test");
+                        $(this).siblings().addClass("pbliftli");
+                    }
+                );
+            })
+        </script>
+        <!--右边问题集中区-->
+        <div class="pbr">
+            <div class="pbrbox" style="display: block;">
+                <ul>
+                    <li>
+                        <div class="pbrtitle1">
+                            <div class="pbrfirstxunhao"></div>
+                            <span class="pbrfirstitle" style="margin-left: 40px">{{ page.title }}</span></div>
+                            {{ page.description|richtext }}
+                    </li>
+                    {% for post in page.get_children %}
+                    <li class="question-details">
+                        <div class="pbrtitle">
+                            <div class="pbrxunhao">{{ forloop.counter }}</div>
+                            <span>{{ post.title }}</span></div>
+                            <p class="dispp" style="display: none;">{{ post.specific.description }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <!--订单详情页码-->
+                <div class="pbrbox-yema">
+                    <ul>
+
+                    </ul>
+                </div>
+                <div class="bottomline">
+                    <hr class="prohr">
+                    <p class="prokf">还有任何疑问？宝马会欢迎您随时联系 <a href="https://bmw-chat-service.com/?wgPortal=VONFpjLZtk" target="_blank">在线客服</a></p>
+                </div>
+            </div>
+        </div>
+        <script>
+            //点击元素展开下拉，其他子元素隐藏，再次点击该元素隐藏下拉
+            $(function () {
+                $(".question-details").click(
+                    function () {
+                        //获取需要点击元素的子元素的属性值
+                        var i = $(this).children(".dispp").attr("style");
+                        //判断：如果当前点击元素的子元素的属性值为none，则将其属性值改为block，反之...
+                        if (i == "display: none;") {
+                            $(this).children(".dispp").css("display", "block");//修改点击元素的子元素的属性值
+                            $(this).siblings().children(".dispp").css("display", "none");//其他子元素的属性值为初始值
+                        } else {
+                            $(this).children(".dispp").css("display", "none");
+                            $(this).siblings().children(".dispp").css("display", "none")
+                        }
+                    }
+                );
+            })
+        </script>
+    </div>
+    <!--中间条款主题end -->
+
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/pro.js' %}"></script>
+{% endblock %}

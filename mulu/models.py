@@ -8,8 +8,9 @@ from wagtail.core.models import Page, Orderable
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
-from points.models import Points, PointConfig
+from points.models import Points, PointConfig, Add
 from orders.models import Orders
+from viplist.models import VipList, VipSetting
 
 
 class GoodsPageTag(TaggedItemBase):
@@ -143,6 +144,7 @@ class GoodsPage(Page):
     )
 
     def get_context(self, request, *args, **kwargs):
+        self.user_name = request.user.username
         context = super().get_context(request)
         # 获取栏目
         small_list = self.get_parent()
@@ -153,6 +155,10 @@ class GoodsPage(Page):
         context['brother'] = brother
 
         self._points = Points.objects.get(user_name=request.user.username)
+        try:
+            self.adds = Add.objects.filter(user_name=self.user_name)
+        except Add.DoesNotExist:
+            self.adds = None
         self.config = PointConfig.objects.get(id=1)
         # 查询用户的所有订单
         self.orders = Orders.objects.filter(user_name=request.user.username).order_by('update_time')
@@ -175,7 +181,7 @@ class GoodsPage(Page):
         return context
 
     def _user_level(self):
-        month_water = int(self._points.month_water)
+        month_water = int(self._points.one_month_capital_flow)
         water_to_point = self.config.water_to_point
         discount_one_water = int(self.config.discount_one_water)
         discount_two_water = int(self.config.discount_two_water)
@@ -206,9 +212,23 @@ class GoodsPage(Page):
 
     def _total_points(self):
         water_to_point = self.config.water_to_point
-        all_water = self._points.all_water
-        points = int(all_water / water_to_point)
-        return points
+        # 积分修改
+        add_points = 0
+        if add_points is not None:
+            for p in self.adds:
+                add_points += p.change_points
+
+        try:
+            VipList.objects.get(user_name=self.user_name)
+            all_water = self._points.one_year_capital_flow
+            # 积分 加减控制
+            points = int(all_water / water_to_point) + add_points
+            return points
+        except VipList.DoesNotExist:
+            all_water = self._points.half_year_capital_flow
+            # 积分 加减控制
+            points = int(all_water / water_to_point) + add_points
+            return points
 
     def _current_points(self):
         points = self._total_points()

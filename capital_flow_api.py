@@ -5,8 +5,6 @@ import datetime
 import time
 from account.pkg.local_database import AuthUser, AuthGroup, PointsPoints, PointConfig, VipList, database
 from dateutil.relativedelta import relativedelta
-# import threadpool
-# from threadpool import makeRequests
 
 
 """
@@ -68,6 +66,10 @@ def flush_all_user():
                 'end_time': _now_date(),
             }
             response = requests.post('http://game.www201.net:1888/jieko/interface.php', data=data, timeout=2)
+            if response.status_code == 403:
+                print('%s nginx 403 等待10s 继续' % datetime.datetime.now())
+                time.sleep(10)
+                continue
         except exceptions.Timeout:
             print('%s 网络连接超时！ 3s 后重试' % datetime.datetime.now())
             continue
@@ -120,6 +122,7 @@ def save_user_data(username_array, one_year, half_year, one_month):
             }).where(PointsPoints.user_name == username)
             a.execute()
             p.execute()
+            user_group_set(username)
         except TypeError:
             print('no type 数据异常')
         except Exception:
@@ -142,11 +145,30 @@ def save_user_data(username_array, one_year, half_year, one_month):
                 'half_year_capital_flow': int(float(half_year[data_temp]['effbet'])),
                 'one_month_capital_flow': int(float(one_month[data_temp]['effbet'])),
             }
+            user_group_set(username)
             AuthUser.insert(sql_user_data).execute()
             PointsPoints.insert(sql_points_data).execute()
             # 时间BUG 处理
             database.execute_sql('update auth_user set date_joined = ? where username = ?', ('2019-06-10 08:14:51.856783', username))
         data_temp += 1
+
+
+# 用户分组设置
+def user_group_set(username):
+    u = AuthUser.select().where(AuthUser.username == username).get()
+    user_id = u.id
+    try:
+        g = AuthGroup.select().where(AuthGroup.user_id == user_id).get()
+        a = AuthGroup.update({
+            AuthGroup.user_id: user_id,
+            AuthGroup.group_id: 3
+        }).where(AuthGroup.user_id == g.user_id)
+        a.execute()
+    except AuthGroup.DoesNotExist:
+        AuthGroup.insert({
+            'user_id': user_id,
+            'group_id': 3,
+        }).execute()
 
 
 # 用户积分信息更新
@@ -362,3 +384,5 @@ flush_all_user()
 #         AuthUser.email: email
 #     }).where(AuthUser.username == user.username)
 #     a.execute()
+
+

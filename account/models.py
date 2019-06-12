@@ -116,7 +116,6 @@ class AccountIndexPage(Page):
 
     def _total_points(self):
         water_to_point = self.config.water_to_point
-        # todo
         # 积分修改
         add_points = 0
         if add_points is not None:

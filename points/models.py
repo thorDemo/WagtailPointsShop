@@ -43,7 +43,7 @@ class Add(models.Model):
     积分 增加情况
     """
     user_name = models.CharField(max_length=255, help_text='用户名')
-    change_points = models.IntegerField()
+    change_points = models.IntegerField(help_text='流水加减 这里输入的是流水不是积分')
     tips = models.CharField(max_length=255, help_text='积分加减备注')
     update_time = models.TimeField(auto_now=True)
 

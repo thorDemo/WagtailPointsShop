@@ -126,12 +126,12 @@ class AccountIndexPage(Page):
             VipList.objects.get(user_name=self.user_name)
             all_water = self.points.one_year_capital_flow
             # 积分 加减控制
-            points = int(all_water / water_to_point) + add_points
+            points = int((all_water + add_points )/ water_to_point)
             return points
         except VipList.DoesNotExist:
             all_water = self.points.half_year_capital_flow
             # 积分 加减控制
-            points = int(all_water / water_to_point) + add_points
+            points = int((all_water + add_points )/ water_to_point)
             return points
 
     def _current_points(self):

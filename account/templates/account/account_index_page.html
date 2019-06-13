@@ -85,6 +85,10 @@
                                     <p>{{ post.goods }}</p>
                                     <p>{{ post.create_time }}</p>
                                     <p>已取消</p>
+                                {% elif post.status == '5' %}
+                                    <p>{{ post.goods }}</p>
+                                    <p>{{ post.create_time }}</p>
+                                    <p>不符合</p>
                                 {% endif %}
                             </div>
                             <div class="zhzx-right-details" style="display: none;">

@@ -164,12 +164,8 @@ class GoodsPage(Page):
         self.orders = Orders.objects.filter(user_name=request.user.username).order_by('update_time')
         # 查询用户等级 打多少折扣
         level, discount = self._user_level()
-        cost_all_points = 0
-        for line in self.orders:
-            cost_all_points += line.cost
-
         #剩余积分
-        surplus_points = self._total_points() - cost_all_points - self.points
+        surplus_points = self._current_points() - (self.points * discount)
 
         if surplus_points < 0:
             context['message'] = '* 对不起您的余额不足兑换该礼品！'
@@ -181,8 +177,7 @@ class GoodsPage(Page):
         return context
 
     def _user_level(self):
-        month_water = int(self._points.one_month_capital_flow)
-        water_to_point = self.config.water_to_point
+        month_water = int(self._points.one_month_capital_flow + self._points.当月异常流水())
         discount_one_water = int(self.config.discount_one_water)
         discount_two_water = int(self.config.discount_two_water)
         discount_three_water = int(self.config.discount_three_water)
@@ -213,28 +208,23 @@ class GoodsPage(Page):
     def _total_points(self):
         water_to_point = self.config.water_to_point
         # 积分修改
-        add_points = 0
-        if add_points is not None:
-            for p in self.adds:
-                add_points += p.change_points
-
         try:
             VipList.objects.get(user_name=self.user_name)
             all_water = self._points.one_year_capital_flow
             # 积分 加减控制
-            points = int((all_water + add_points )/ water_to_point)
+            points = int((all_water + self._points.一年异常流水()) / water_to_point)
             return points
         except VipList.DoesNotExist:
             all_water = self._points.half_year_capital_flow
             # 积分 加减控制
-            points = int((all_water + add_points )/ water_to_point)
+            points = int((all_water + self._points.半年异常流水()) / water_to_point)
             return points
 
     def _current_points(self):
         points = self._total_points()
         cost = 0
         for line in self.orders:
-            if line.status != '4':
+            if int(line.status) < 4:
                 cost = cost + line.cost
         return points - cost
 

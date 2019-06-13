@@ -22,8 +22,19 @@ class PointsAdmin(ModelAdmin):
     # menu_order = 1000
     # add_to_settings_menu = False
     # exclude_from_explorer = False
-    list_display = ('user_name', 'one_month_capital_flow', 'half_year_capital_flow', 'one_year_capital_flow')
-    list_filter = ('user_name',)
+    list_display = (
+        '游戏账号',
+        'one_month_capital_flow',
+        'half_year_capital_flow',
+        'one_year_capital_flow',
+        '当月异常流水',
+        '当月流水',
+        '半年流水',
+        '一年流水',
+        'vip',
+        '商城等级',
+        '总积分',
+        '剩余积分')
     search_fields = ('user_name',)
 
 
@@ -34,9 +45,9 @@ class AddAdmin(ModelAdmin):
     # menu_order = 1000
     # add_to_settings_menu = False
     # exclude_from_explorer = False
-    list_display = ('user_name', 'change_points', 'tips', 'update_time')
+    list_display = ('user_name', 'capital_flow', 'tips', 'update_time')
     list_filter = ('user_name',)
-    search_fields = ('user_name',  'change_points')
+    search_fields = ('user_name',)
 
 
 class Config(ModelAdmin):

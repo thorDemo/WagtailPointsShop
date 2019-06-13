@@ -10,7 +10,7 @@ class OrdersAdmin(ModelAdmin):
     menu_order = 1000
     add_to_settings_menu = False
     exclude_from_explorer = False
-    list_display = ('create_time', 'goods', 'user_name', 'take_name',  'phone', 'address',)
+    list_display = ('create_time', 'goods', 'user_name', 'take_name',  'phone', 'address', 'cost', 'discount', 'status')
     list_filter = ('create_time', 'user_name', 'status')
     search_fields = ('create_time', 'goods', 'user_name', 'take_name', 'wechart')
 

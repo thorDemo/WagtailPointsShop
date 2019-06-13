@@ -6,6 +6,7 @@ database = SqliteDatabase('db.sqlite3', pragmas={'journal_mode': 'wal', 'cache_s
 
 
 class AuthUser(Model):
+    id = IntegerField(primary_key=True)
     username = CharField(max_length=150)
     password = CharField(max_length=128)
     first_name = CharField(max_length=30)

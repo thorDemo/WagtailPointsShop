@@ -1,22 +1,150 @@
 from django.db import models
 from wagtail.admin.edit_handlers import FieldPanel, FieldRowPanel, MultiFieldPanel
+from orders.models import Orders
+from viplist.models import VipList, VipSetting
+import datetime
+from dateutil.relativedelta import relativedelta
+from django.db.models import F
 
 
 class Points(models.Model):
     """
-    当前积分情况
+    当前流水
     """
     user_name = models.CharField(max_length=255, unique=True)
     one_year_capital_flow = models.IntegerField(help_text='一年总流水', default=0)
     half_year_capital_flow = models.IntegerField(help_text='半年总流水', default=0)
     one_month_capital_flow = models.IntegerField(help_text='当月总流水', default=0)
 
-    panels = [
-        FieldPanel('user_name'),
-        FieldPanel('one_year_capital_flow'),
-        FieldPanel('half_year_capital_flow'),
-        FieldPanel('one_month_capital_flow'),
-    ]
+    def 游戏账号(self):
+        return self.user_name
+
+    def 当月流水(self):
+        error = self.当月异常流水()
+        return self.one_month_capital_flow + error
+
+    def 半年流水(self):
+        error = self.半年异常流水()
+        return self.half_year_capital_flow + error
+
+    def 一年流水(self):
+        error = self.一年异常流水()
+        return self.one_year_capital_flow + error
+
+    def 剩余积分(self):
+        # 获取积分配置信息
+        self.config = PointConfig.objects.get(id=1)
+        self.orders = Orders.objects.filter(user_name=self.user_name).order_by('update_time')
+        points = self.总积分()
+        cost = 0
+        for line in self.orders:
+            if int(line.status) < 4:
+                cost = cost + line.cost
+        return points - cost
+
+    def vip(self):
+        # 获取VIP状态
+        try:
+            v = VipList.objects.filter(user_name=self.user_name)
+            if len(v) == 0:
+                vip = '0'
+            else:
+                vip = '1'
+        except VipList.DoesNotExist:
+            vip = '0'
+        return vip
+
+    def 商城等级(self):
+        # 会员等级
+        self.config = PointConfig.objects.get(id=1)
+        month_water = self.one_month_capital_flow + self.当月异常流水()
+        discount_one_water = int(self.config.discount_one_water)
+        discount_two_water = int(self.config.discount_two_water)
+        discount_three_water = int(self.config.discount_three_water)
+        discount_four_water = int(self.config.discount_four_water)
+        discount_five_water = int(self.config.discount_five_water)
+        discount_six_water = int(self.config.discount_six_water)
+        discount_seven_water = int(self.config.discount_seven_water)
+        discount_eight_water = int(self.config.discount_eight_water)
+        if month_water < discount_one_water:
+            return 0
+        elif month_water < discount_two_water:
+            return 1
+        elif month_water < discount_three_water:
+            return 2
+        elif month_water < discount_four_water:
+            return 3
+        elif month_water < discount_five_water:
+            return 4
+        elif month_water < discount_six_water:
+            return 5
+        elif month_water < discount_seven_water:
+            return 6
+        elif month_water < discount_eight_water:
+            return 7
+        else:
+            return 8
+
+    def 总积分(self):
+        # 获取积分配置信息
+        water_to_point = self.config.water_to_point
+        # 积分修改
+        try:
+            VipList.objects.get(user_name=self.user_name)
+            all_water = self.one_year_capital_flow
+            # 积分 加减控制
+            points = int((all_water + self.一年异常流水()) / water_to_point)
+            return points
+        except VipList.DoesNotExist:
+            all_water = self.half_year_capital_flow
+            # 积分 加减控制
+            points = int((all_water + self.半年异常流水()) / water_to_point)
+            return points
+
+    def 当月异常流水(self):
+        try:
+            # 获取流水加减表
+            now = datetime.datetime.now()
+            delta = datetime.timedelta(days=-30)
+            n_days = now + delta
+            self.adds = Add.objects.filter(user_name=self.user_name).filter(update_time__gte=n_days)
+        except Add.DoesNotExist:
+            self.adds = None
+        add_points = 0
+        if add_points is not None:
+            for p in self.adds:
+                add_points += p.change_points
+        return add_points
+
+    def 半年异常流水(self):
+        try:
+            # 获取流水加减表
+            now = datetime.datetime.now()
+            delta = relativedelta(months=-6)
+            n_days = now + delta
+            self.adds = Add.objects.filter(user_name=self.user_name).filter(update_time__gte=n_days)
+        except Add.DoesNotExist:
+            self.adds = None
+        add_points = 0
+        if add_points is not None:
+            for p in self.adds:
+                add_points += p.change_points
+        return add_points
+
+    def 一年异常流水(self):
+        try:
+            # 获取流水加减表
+            now = datetime.datetime.now()
+            delta = relativedelta(years=-1)
+            n_days = now + delta
+            self.adds = Add.objects.filter(user_name=self.user_name).filter(update_time__gte=n_days)
+        except Add.DoesNotExist:
+            self.adds = None
+        add_points = 0
+        if add_points is not None:
+            for p in self.adds:
+                add_points += p.change_points
+        return add_points
 
 
 class Cost(models.Model):
@@ -45,12 +173,16 @@ class Add(models.Model):
     user_name = models.CharField(max_length=255, help_text='用户名')
     change_points = models.IntegerField(help_text='流水加减 这里输入的是流水不是积分')
     tips = models.CharField(max_length=255, help_text='积分加减备注')
-    update_time = models.TimeField(auto_now=True)
+    update_time = models.DateField(help_text='积分修改时间')
+    
+    def capital_flow(self):
+        return self.change_points
 
     panels = [
         FieldPanel('user_name'),
         FieldPanel('change_points'),
         FieldPanel('tips'),
+        FieldPanel('update_time'),
     ]
 
 

@@ -84,8 +84,8 @@ class AccountIndexPage(Page):
         return context
 
     def _user_level(self):
-        # 月流水计算 没有扣除加减积分
-        month_water = int(self.points.one_month_capital_flow)
+        # 月流水计算 扣除加减积分
+        month_water = self.points.one_month_capital_flow + self.points.当月异常流水()
         water_to_point = self.config.water_to_point
         discount_one_water = int(self.config.discount_one_water)
         discount_two_water = int(self.config.discount_two_water)
@@ -117,27 +117,24 @@ class AccountIndexPage(Page):
     def _total_points(self):
         water_to_point = self.config.water_to_point
         # 积分修改
-        add_points = 0
-        if add_points is not None:
-            for p in self.adds:
-                add_points += p.change_points
-
         try:
             VipList.objects.get(user_name=self.user_name)
             all_water = self.points.one_year_capital_flow
             # 积分 加减控制
-            points = int((all_water + add_points )/ water_to_point)
+            points = int((all_water + self.points.一年异常流水()) / water_to_point)
             return points
         except VipList.DoesNotExist:
             all_water = self.points.half_year_capital_flow
             # 积分 加减控制
-            points = int((all_water + add_points )/ water_to_point)
+            points = int((all_water + self.points.半年异常流水()) / water_to_point)
             return points
 
     def _current_points(self):
         points = self._total_points()
         cost = 0
         for line in self.orders:
-            if line.status != '4':
+            if int(line.status) < 4:
                 cost = cost + line.cost
         return points - cost
+
+

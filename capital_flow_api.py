@@ -125,7 +125,7 @@ def save_user_data(username_array, one_year, half_year, one_month):
             user_group_set(username)
         except TypeError:
             print('no type 数据异常')
-        except Exception:
+        except AuthUser.DoesNotExist:
             # 如果用户不存在
             print('%s %s 用户不存在 新建' % (datetime.datetime.now(), username))
             sql_user_data = {
@@ -145,11 +145,12 @@ def save_user_data(username_array, one_year, half_year, one_month):
                 'half_year_capital_flow': int(float(half_year[data_temp]['effbet'])),
                 'one_month_capital_flow': int(float(one_month[data_temp]['effbet'])),
             }
-            user_group_set(username)
             AuthUser.insert(sql_user_data).execute()
             PointsPoints.insert(sql_points_data).execute()
             # 时间BUG 处理
             database.execute_sql('update auth_user set date_joined = ? where username = ?', ('2019-06-10 08:14:51.856783', username))
+            user_group_set(username)
+
         data_temp += 1
 
 
@@ -371,7 +372,7 @@ def _now_date():
 
 flush_all_user()
 # print(one_month_capital_flow(2))
-# print(flush_one_user('bme99mkw', '2019-06-01', '2019-06-11'))
+# print(flush_one_user('pxlliao', '2019-06-01', '2019-06-11'))
 # print(flush_one_user('loveft2018', '2019-05-11', '2019-06-11'))
 
 # users = AuthUser.select().where(AuthUser.username != 'Thor')

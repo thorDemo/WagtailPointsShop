@@ -18,7 +18,7 @@ class Orders(models.Model):
     cost = models.IntegerField(help_text='折扣价')
     discount = models.FloatField(help_text='折扣比例')
     real_cost = models.IntegerField(help_text='商品需要积分')
-    status_choices = (('0', '待确认'), ('1', '待发货'), ('2', '配送中'), ('3', '已送达'), ('4', '已取消'))
+    status_choices = (('0', '待确认'), ('1', '待发货'), ('2', '配送中'), ('3', '已送达'), ('4', '已取消'), ('5', '不符合'))
     status = models.CharField(max_length=255, choices=status_choices, default='0')
     update_time = models.DateField(auto_now=True)
     create_time = models.DateField(auto_now_add=True)

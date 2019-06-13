@@ -17,17 +17,17 @@
     <meta name="description" content=""/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="shortcut icon " type="images/x-icon" href="{% static 'favicon.ico' %}">
-    {# 全局 stylesheets #}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/head.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/foot.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bmw.css' %}">
-    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-    {% block extra_css %}
-        {# Override this in templates to add extra stylesheets #}
-    {% endblock %}
+	{# 全局 stylesheets #}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/head.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/foot.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bmw.css' %}">
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+	{% block extra_css %}
+	    {# Override this in templates to add extra stylesheets #}
+	{% endblock %}
 </head>
 <body bgColor="transparent">
 <div id="bg-head">

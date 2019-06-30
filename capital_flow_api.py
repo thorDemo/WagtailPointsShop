@@ -370,12 +370,13 @@ def _now_date():
     return now
 
 
-while True:
-    flush_all_user()
-    time.sleep(60 * 60 * 2)
-    print('延时等待！2小时')
+# while True:
+#     flush_all_user()
+#     time.sleep(60 * 60 * 2)
+#     print('延时等待！2小时')
 # print(one_month_capital_flow(2))
-# print(flush_one_user('pxlliao', '2019-06-01', '2019-06-11'))
+# for x in range(1, 10):
+#     print(flush_one_user('wx5885', '2019-06-0%s' % x, '2019-06-0%s' % x))
 # print(flush_one_user('loveft2018', '2019-05-11', '2019-06-11'))
 
 # users = AuthUser.select().where(AuthUser.username != 'Thor')

@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'dashboard',
     'points',
     'viplist',
+    'data',
+    'documents',
     'django_crontab',
 
     'wagtail.contrib.forms',
@@ -67,9 +69,10 @@ INSTALLED_APPS = [
 ]
 
 # 修改定时任务时间
-CRONJOBS = (
-    ('31 16 * * *', 'account.api.auto_flush_db', '>> /Users/hexiaotian/PycharmProjects/WagtailPointsShop/account/flush.log'),
-)
+# CRONJOBS = (
+#     ('31 16 * * *', 'account.api.auto_flush_db', '>
+# > /Users/hexiaotian/PycharmProjects/WagtailPointsShop/account/flush.log'),
+# )
 
 WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/form/'
 

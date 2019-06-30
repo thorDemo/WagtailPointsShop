@@ -80,39 +80,14 @@ class AccountIndexPage(Page):
         context['orders'] = orders_page
         context['total_points'] = self._total_points()
         context['current_points'] = self._current_points()
-        context['level'], context['up_need'] = self._user_level()
+        context['level'] = self._user_level()
+        # todo 升级需要积分
         return context
 
     def _user_level(self):
         # 月流水计算 扣除加减积分
-        month_water = self.points.one_month_capital_flow + self.points.当月异常流水()
-        water_to_point = self.config.water_to_point
-        discount_one_water = int(self.config.discount_one_water)
-        discount_two_water = int(self.config.discount_two_water)
-        discount_three_water = int(self.config.discount_three_water)
-        discount_four_water = int(self.config.discount_four_water)
-        discount_five_water = int(self.config.discount_five_water)
-        discount_six_water = int(self.config.discount_six_water)
-        discount_seven_water = int(self.config.discount_seven_water)
-        discount_eight_water = int(self.config.discount_eight_water)
-        if month_water < discount_one_water:
-            return 0, int((discount_one_water - month_water)/water_to_point)
-        elif month_water < discount_two_water:
-            return 1, int((discount_two_water - month_water)/water_to_point)
-        elif month_water < discount_three_water:
-            return 2, int((discount_three_water - month_water)/water_to_point)
-        elif month_water < discount_four_water:
-            return 3, int((discount_four_water - month_water)/water_to_point)
-        elif month_water < discount_five_water:
-            return 4, int((discount_five_water - month_water)/water_to_point)
-        elif month_water < discount_six_water:
-            return 5, int((discount_six_water - month_water)/water_to_point)
-        elif month_water < discount_seven_water:
-            return 6, int((discount_seven_water - month_water)/water_to_point)
-        elif month_water < discount_eight_water:
-            return 7, int((discount_eight_water - month_water)/water_to_point)
-        else:
-            return 8, -1
+        p = Points.objects.filter(user_name__exact=self.user_name)[0]
+        return p.user_level
 
     def _total_points(self):
         water_to_point = self.config.water_to_point

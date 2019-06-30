@@ -27,6 +27,9 @@ class PointsAdmin(ModelAdmin):
         'one_month_capital_flow',
         'half_year_capital_flow',
         'one_year_capital_flow',
+        'one_year_lottery',
+        'half_year_lottery',
+        'month_lottery',
         '当月异常流水',
         '当月流水',
         '半年流水',
@@ -45,9 +48,9 @@ class AddAdmin(ModelAdmin):
     # menu_order = 1000
     # add_to_settings_menu = False
     # exclude_from_explorer = False
-    list_display = ('user_name', 'capital_flow', 'tips', 'update_time')
+    list_display = ('user_name', '流水变动', 'tips', 'update_time')
     list_filter = ('user_name',)
-    search_fields = ('user_name',)
+    search_fields = ('user_name',  'change_points')
 
 
 class Config(ModelAdmin):

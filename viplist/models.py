@@ -2,9 +2,19 @@ from django.db import models
 
 
 class VipList(models.Model):
-
-    user_name = models.CharField(max_length=255, help_text='用户名')
+    user_id = models.CharField(max_length=255, help_text='游戏账号', blank=True)
+    user_name = models.CharField(max_length=255, help_text='姓名')
+    user_level = models.CharField(max_length=255, help_text='官网VIP层级别', blank=True)
     change_time = models.DateField(auto_now=True)
+
+    def 游戏账号(self):
+        return self.user_id
+
+    def 姓名(self):
+        return self.user_name
+
+    def 官网VIP层级别(self):
+        return self.user_level
 
     class Meta:
         db_table = 'vip_list'

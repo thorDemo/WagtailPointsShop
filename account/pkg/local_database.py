@@ -34,9 +34,13 @@ class AuthGroup(Model):
 
 class PointsPoints(Model):
     user_name = CharField(max_length=255)
-    one_year_capital_flow = IntegerField()
-    half_year_capital_flow = IntegerField()
-    one_month_capital_flow = IntegerField()
+    one_year_capital_flow = FloatField()
+    half_year_capital_flow = FloatField()
+    one_month_capital_flow = FloatField()
+    one_year_lottery = FloatField()
+    half_year_lottery = FloatField()
+    month_lottery = FloatField()
+    user_level = IntegerField()
 
     class Meta:
         table_name = 'points_points'
@@ -70,7 +74,10 @@ class PointConfig(Model):
 
 
 class VipList(Model):
+    id = IntegerField(primary_key=True)
+    user_id = CharField(max_length=255)
     user_name = CharField(max_length=255)
+    user_level = CharField(max_length=255)
     change_time = DateField()
 
     class Meta:

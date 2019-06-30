@@ -3,7 +3,7 @@
 {% load wagtailcore_tags %}
 
 {% block extra_css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/rules.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/VipClub.css' %}">
 {% endblock %}
 
 {% block type_list %}
@@ -18,30 +18,223 @@
 {% endblock %}
 
 {% block content %}
-    <!--中间条款主题  start -->
+   <!--中间条款主题  start -->
     <div style="width: 1000px;margin: 0 auto">
-        <div class="rulepic"><img src="{% static 'images/dengji_title.png'%}" alt=""></div>
-        <div class="rulepic"><span class="jfspan1">{{ change }}投注额 = <span style="font-size: 24px">1</span> 个积分</span> <span class="jfspan2">天天赚积分，等级越高，折扣越多！</span></div>
-        <!--条款内容start -->
-        <div class="jifenbox">
-            <table class="jifentable">
-                <tr style="border-bottom: none" class="tbfirsttr">
-                    <th>等级</th>
-                    <th>积分兑换折扣</th>
-                    <th>升级条件</th>
-                </tr>
-                {% for line in data %}
-                    <tr>
-                        <td class="paiminglist"><img src="/static/images/level/{{ forloop.counter }}.png" alt=""></td>
-                        <td>{{ line.level }}</td>
-                        <td>单月累积<span style="color: #fec45d">{{ line.points }}</span>个积分，同时完成<span style="color: #fec45d">{{ line.water }}</span>的流水</td>
-                    </tr>
-                {% endfor %}
-
-
-            </table>
+        <div class="rulepic"><img src="{% static 'images/积分等级.png' %}" alt=""></div>
+        <!--<div class="rulepic"><span class="jfspan1">400投注额 = <span style="font-size: 24px">1</span> 个积分</span> <span class="jfspan2">天天赚积分，升等级越块 折扣越多！</span></div>-->
+        <!--会员享有特权start -->
+        <div class="bmw-welfare">
+            <!--上三-->
+            <ul class="bmw-welfare-3">
+                <li>
+                    <img src="{% static 'images/旅游.png' %}" alt=""/>
+                    <p>VIP高端旅游</p>
+                </li>
+                <li>
+                    <img src="{% static 'images/客服.png' %}" alt=""/>
+                    <p>专属客服服务</p>
+                </li>
+                <li>
+                    <img src="{% static 'images/存送.png' %}" alt=""/>
+                    <p>高额存送</p>
+                </li>
+            </ul>
+            <!--下四-->
+            <ul class="bmw-welfare-3">
+                <li>
+                    <img src="{% static 'images/生日礼金.png' %}" alt=""/>
+                    <p>专属生日礼金</p>
+                </li>
+                <li>
+                    <img src="{% static 'images/筹码.png' %}" alt=""/>
+                    <p>VIP每月免费筹码</p>
+                </li>
+                <li>
+                    <img src="{% static 'images/晋级礼金.png' %}" alt=""/>
+                    <p>专享晋级礼金</p>
+                </li>
+            </ul>
         </div>
-                <!--条款内容end -->
+        <!--会员享有特权end -->
+
+
+        <!--晋级要求start -->
+        <div class="bmw-require" style="margin-bottom: 50px;">
+            <p>VIP晋级要求</p>
+            <div>
+                <table>
+                    <tr>
+                        <td>会员等级</td>
+                        <td>晋级条件</td>
+                    </tr>
+                    <tr>
+                        <td>黄金会员
+                            <img src="{% static 'images/黄金.jpg' %}" alt=""/>
+                        </td>
+                        <td>
+                            1、单月【全部平台】总投注额50w<br>
+                            2、单月【全部老虎机】平台总投注额20w
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>铂金会员
+                            <img src="{% static 'images/铂金.jpg' %}" alt=""/>
+                        </td>
+                        <td>
+                            1、单月【全部平台】总投注额200w<br>
+                            2、单月【全部老虎机】平台总投注额120w
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>钻石会员
+                            <img src="{% static 'images/钻石.jpg' %}" alt=""/>
+                        </td>
+                        <td>
+                            1、单月【全部平台】总投注额500w<br>
+                            2、单月【全部老虎机】平台总投注额300w
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>至尊会员
+                            <img src="{% static 'images/至尊.jpg' %}" alt=""/>
+                        </td>
+                        <td>
+                            1、单月【全部平台】总投注额800w<br>
+                            2、单月【全部老虎机】平台总投注额500w
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>王者会员
+                            <img src="{% static 'images/王者.jpg' %}" alt=""/>
+                        </td>
+                        <td>
+                            1、单月【全部平台】总投注额1000w<br>
+                            2、单月【全部老虎机】平台总投注额600w
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>特邀会员
+                            <img src="{% static 'images/特邀.jpg' %}" alt=""/>
+                        </td>
+                        <td>
+                            1、单月【全部平台】总投注额50w<br>
+                            2、单月【全部老虎机】平台总投注额20w
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!--晋级要求end -->
+
+
+        <!--福利享受特权start -->
+        <div class="bmw-welfare welfare-b" style="margin-bottom: 50px;">
+            <p>VIP享受福利</p>
+            <div>
+                <table>
+                    <tr>
+                        <td>会员福利</td>
+                        <td>普通会员<img src="{% static 'images/黄金.jpg' %}" alt=""/></td>
+                        <td>黄金会员<img src="{% static 'images/黄金.jpg' %}" alt=""/></td>
+                        <td>铂金会员<img src="{% static 'images/铂金.jpg' %}" alt=""/></td>
+                        <td>钻石会员<img src="{% static 'images/钻石.jpg' %}" alt=""/></td>
+                        <td>至尊会员<img src="{% static 'images/至尊.jpg' %}" alt=""/></td>
+                        <td>王者会员<img src="{% static 'images/王者.jpg' %}" alt=""/></td>
+                        <td>特邀会员<img src="{% static 'images/特邀.jpg' %}" alt=""/></td>
+                    </tr>
+                    <tr>
+                        <td>晋级礼金</td>
+                        <td></td>
+                        <td>58元</td>
+                        <td>188元</td>
+                        <td>588元</td>
+                        <td>888元</td>
+                        <td>1888元</td>
+                        <td>2888元</td>
+                    </tr>
+                    <tr>
+                        <td>生日礼金</td>
+                        <td></td>
+                        <td>58元</td>
+                        <td>188元</td>
+                        <td>588元</td>
+                        <td>888元</td>
+                        <td>1888元</td>
+                        <td>2888元</td>
+                    </tr>
+                    <tr>
+                        <td>积分商城折扣</td>
+                        <td>无折扣</td>
+                        <td>9折</td>
+                        <td>8折</td>
+                        <td>7.59折</td>
+                        <td>7折</td>
+                        <td>6.5折</td>
+                        <td>6折</td>
+                    </tr>
+                    <tr>
+                        <td>存送优惠</td>
+                        <td>存款15%，最高888，需12倍流水</td>
+                        <td>存款15%，最高2888，需15倍流水</td>
+                        <td>存款16%，最高2888，需15倍流水</td>
+                        <td>存款17%，最高2888，需15倍流水</td>
+                        <td>存款18%，最高2888，需15倍流水</td>
+                        <td>存款19%，最高2888，需15倍流水</td>
+                        <td>存款20%，最高2888，需15倍流水</td>
+                    </tr>
+                    <tr>
+                        <td>每月免费筹码</td>
+                        <td></td>
+                        <td>18</td>
+                        <td>88</td>
+                        <td>188</td>
+                        <td>388</td>
+                        <td>888</td>
+                        <td>1288</td>
+                    </tr>
+                    <tr>
+                        <td>专属客服</td>
+                        <td>在线客服</td>
+                        <td>QQ客服</td>
+                        <td>VIP专员</td>
+                        <td>VIP专员</td>
+                        <td>VIP专员</td>
+                        <td>客户经理</td>
+                        <td>客户经理</td>
+                    </tr>
+                    <tr>
+                        <td>单日提款额度</td>
+                        <td>无上限</td>
+                        <td>无上限</td>
+                        <td>无上限</td>
+                        <td>无上限</td>
+                        <td>无上限</td>
+                        <td>无上限</td>
+                        <td>无上限</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!--福利享受特权end -->
+
+
+        <!--VIP晋级规则 start-->
+        <div class="bmw-rules" style="margin-bottom: 50px;">
+            <p>VIP晋级规则</p>
+                <ol>
+                <li>1、活跃状态定义：当月存款3次以上则为活跃会员（不限制存款金额）</li>
+                <li>2、晋级礼金需要会员为活跃状态，升级VIP等级需要在下个月1号生效。不活跃的VIP会员每个月下调一级。</li>
+                <li>3、免费筹码需要当月有200元以上的存款，每月可申请一次。</li>
+                <li>4、达到升级要求的会员即可自动升级，未达到升级标准会员，需手动查询每个月掉级VIP数据。</li>
+                <li>5、大额存送优惠，生日礼金，免费筹码需显示在积分商城，需点击申请，晋级奖金无需申请。所有奖金只需一倍流水，不限制平台投注。</li>
+                <li>6、调整VIP会员积分折扣，并与后台积分折扣同步，钻石，至尊，特邀VIP这3个等级的折扣力度要大些，其余等级将根据现有的积分商城同步。</li>
+                <li>7、优惠页面首个banner永久制定VIP俱乐部。</li>
+                <li>8、如何更有力度让会员邀请好友过来游戏，指定邀请朋友活动。</li>
+                <li>9、指定VIP专员以及客服经理名字，对应的VIP等级可联系对应的专属人员接待。</li>
+            </ol>
+        </div>
+        <!--VIP晋级规则 end-->
+
     </div>
     <!--中间条款主题end -->
 

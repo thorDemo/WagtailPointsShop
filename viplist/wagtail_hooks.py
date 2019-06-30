@@ -12,9 +12,9 @@ class VipAdmin(ModelAdmin):
     # menu_order = 1000
     # add_to_settings_menu = False
     # exclude_from_explorer = False
-    list_display = ('user_name',)
-    list_filter = ('user_name',)
-    search_fields = ('user_name',)
+    list_display = ('游戏账号', '姓名', '官网VIP层级别')
+    list_filter = ('user_level', )
+    search_fields = ('user_id', 'user_name', 'user_level')
 
 
 class SetAdmin(ModelAdmin):
@@ -32,13 +32,4 @@ class LibraryGroup(ModelAdminGroup):
 
 
 modeladmin_register(LibraryGroup)
-
-
-@hooks.register('register_page_listing_buttons')
-def page_listing_buttons(page, page_perms, is_parent=False):
-    yield wagtailadmin_widgets.PageListingButton(
-        'A page listing button',
-        '/goes/to/a/url/',
-        priority=10
-    )
 

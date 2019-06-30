@@ -107,22 +107,22 @@ def save_user_data(username_array, one_year, half_year, one_month):
         try:
             user = AuthUser.select().where(AuthUser.username == username).get()
             print('%s %s 用户已经存在 更新数据' % (datetime.datetime.now(), user.username))
-            a = AuthUser.update({
-                AuthUser.first_name: '佚',
-                AuthUser.last_name: '名',
-                AuthUser.email: '%s@bmw1984.com' % username,
-                AuthUser.is_superuser: 0,
-                AuthUser.is_staff: 0,
-                AuthUser.is_active: 1,
-            }).where(AuthUser.username == username)
+            #a = AuthUser.update({
+            #    AuthUser.first_name: '佚',
+            #    AuthUser.last_name: '名',
+            #    AuthUser.email: '%s@bmw1984.com' % username,
+            #    AuthUser.is_superuser: 0,
+            #    AuthUser.is_staff: 0,
+            #    AuthUser.is_active: 1,
+            #}).where(AuthUser.username == username)
             p = PointsPoints.update({
                 PointsPoints.one_year_capital_flow:  int(float(one_year[data_temp]['effbet'])),
                 PointsPoints.half_year_capital_flow: int(float(half_year[data_temp]['effbet'])),
                 PointsPoints.one_month_capital_flow: int(float(one_month[data_temp]['effbet'])),
             }).where(PointsPoints.user_name == username)
-            a.execute()
+            #a.execute()
             p.execute()
-            user_group_set(username)
+            #user_group_set(username)
         except TypeError:
             print('no type 数据异常')
         except AuthUser.DoesNotExist:
@@ -370,7 +370,10 @@ def _now_date():
     return now
 
 
-flush_all_user()
+while True:
+    flush_all_user()
+    time.sleep(60 * 60 * 2)
+    print('延时等待！2小时')
 # print(one_month_capital_flow(2))
 # print(flush_one_user('pxlliao', '2019-06-01', '2019-06-11'))
 # print(flush_one_user('loveft2018', '2019-05-11', '2019-06-11'))

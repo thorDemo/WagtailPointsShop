@@ -68,7 +68,7 @@
                     </div>
                     <div style="margin-bottom: 10px">
                         <p class="warnuser" style="padding-right: 22px">*</p>
-                        <p style="color: #fec45d;padding-right: 60px">邮 箱</p><input type="email" placeholder="请输入邮箱地址" name="Email" id="f3" required/>
+                        <p style="color: #fec45d;padding-right: 60px">邮 箱</p><input type="email" value="{{ user.username }}@bmw1984.com" readonly="readonly" name="Email" id="f3" required/>
                     </div>
                     <div style="margin-bottom: 10px">
                         <p class="warnuser" style="padding-right: 22px">*</p>
@@ -80,12 +80,12 @@
                     </div>
                     <div style="margin-bottom: 10px">
                         <p class="warnuser" style="padding-right: 22px">*</p>
-                        <p style="color: #fec45d;padding-right: 40px">邮寄地址</p><input type="text" placeholder="请输入邮寄地址" name="Address" id="f6" required/>
+                        <p style="color: #fec45d;padding-right: 40px">邮寄地址</p><input type="text" placeholder="虚拟商品不写地址" name="Address" id="f6"/>
                     </div>
                     <div style="margin-bottom: 10px;height: 100px">
                         <p class="warnuser" style="padding-right: 29px"></p>
                         <p style="color: #fec45d;padding-right: 60px;display:inline-block;vertical-align:middle;margin-bottom: 90px">备 注</p>
-                        <textarea class="form-size" name="Tips" id="" cols="30" rows="10" placeholder="   如有额外说明，请填写"></textarea>
+                        <textarea class="form-size" name="Tips" id="" cols="30" rows="10" placeholder="如有额外说明，请填写"></textarea>
                     </div>
                     <div class="form-bt">
                     	{% if message %}

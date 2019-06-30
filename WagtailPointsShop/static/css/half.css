@@ -1,0 +1,191 @@
+/************************************************兑换提交申请表单 start*************************************************/
+*{
+    margin: 0;
+    padding: 0;
+}
+.change-detail-1{
+    width: 1000px;
+    margin: 0 auto 180px;
+}
+.change-text-1{
+    width: 1000px;
+    height: 400px;
+}
+.change-sub-1{
+    width: 1000px;
+    height: 686px;
+    background: -webkit-linear-gradient(#000000, #525252); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#000000, #525252); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#000000, #525252); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#45414e, #232323); /* 标准的语法 */
+}
+.change-text-right-1{
+    float: left;
+    width: 600px;
+    height: 400px;
+    background-color: #ffffff;
+}
+.change-text-right1-1{
+    width: 100%;
+    height:400px;
+    padding: 20px 10px 40px 0;
+    position: relative;
+}
+.change-text-right1-1 div p{
+    color: #4c4c4c;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+.zxkf-1{
+    /*margin-right: 20px;*/
+    position: absolute;
+    bottom: -5px;
+    left: 130px;
+}
+.zxkf-1,.cjyw-1{
+    display: block;
+    width: 145px;
+    height: 55px;
+    line-height: 55px;
+    color: #ffffff;
+    font-size: 16px;
+    text-align: center;
+    /*margin-top: 50px;*/
+    background: -webkit-linear-gradient(#000000, #525252); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#000000, #525252); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#000000, #525252); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#000000, #525252); /* 标准的语法 */
+}
+.cjyw-1{
+    position: absolute;
+    bottom: -5px;
+    left: 310px;
+}
+.zxkf-1:hover,.cjyw-1:hover{
+    color: #ffffff;
+    width: 145px;
+    height: 55px;
+    text-align: center;
+    background: -webkit-linear-gradient(#525252, #000000); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#525252, #000000); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#525252, #000000); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#525252, #000000); /* 标准的语法 */
+}
+/*商品图文详情*/
+.rich-text{
+    width: 1000px;
+    background-color: #ffffff
+}
+.rich-text h4{
+    width: 1000px;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid gray;
+    padding-left: 30px;
+    padding-top: 10px;
+    background: url("../picture/ct_icon1.png") no-repeat 10px 24px;
+    text-align: left;
+}
+.rich-text > h4{
+    display: inline-block;
+    font-weight: bolder
+}
+.rich-text{
+    width: 1000px;
+    text-align: center;
+}
+.rich-text ul{
+    padding: 20px 30px 30px 20px;
+    margin: 0;
+    text-align: left;
+}
+.rich-text ul li{
+    /*width: 810px;*/
+    margin-bottom: 5px;
+}
+/*填写表单提交*/
+.form-left{
+    float: left;
+    width: 600px;
+    height: 526px;
+    padding-right: 100px;
+    padding-left: 80px;
+    margin-top: 60px;
+}
+.form-right{
+    float: left;
+    margin-top: 100px;
+    box-shadow:0 0 8px #1b1b1b;
+    -moz-box-shadow:0 0 8px #DDD;
+    -webkit-box-shadow:2px 2px 10px #000000;
+}
+.form-left p{
+    display: inline;
+}
+.warnuser{
+    color: red;
+}
+.form-left input{
+    width: 299px;
+    height: 40px;
+    padding-left: 10px;
+}
+.form-left textarea{
+    width: 299px;
+    height: 100px;
+    padding-left: 10px;
+}
+.form-bt{
+    width: 299px;
+    height: 66px;
+    margin-top: 9px;
+    float: right;
+}
+.form-bt button{
+    cursor: pointer;
+    outline: none;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    display: inline-block;
+    width: 144px;
+    height: 66px;
+    line-height: 66px;
+    text-align: center;
+}
+.form-bt button:first-child{
+    display: inline-block;
+    width: 144px;
+    height: 66px;
+    margin-right: 11px;
+    background: -webkit-linear-gradient(#ffc45d, #bb8a35 ); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#ffc45d, #bb8a35); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#ffc45d, #bb8a35); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#ffc45d, #bb8a35); /* 标准的语法 */
+}
+.form-bt button:first-child:hover{
+    display: inline-block;
+    width: 144px;
+    height: 66px;
+    margin-right: 11px;
+    background: -webkit-linear-gradient(#bb8a35, #ffc45d ); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#bb8a35, #ffc45d); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#bb8a35, #ffc45d); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#bb8a35, #ffc45d); /* 标准的语法 */
+}
+.form-bt button:last-child{
+    background: -webkit-linear-gradient(#000000, #525252); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#000000, #525252); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#000000, #525252); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#000000, #525252); /* 标准的语法 */
+}
+.form-bt button:last-child:hover{
+    background: -webkit-linear-gradient(#525252, #000000); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#525252, #000000); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#525252, #000000); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#525252, #000000); /* 标准的语法 */
+}
+
+
+/************************************************兑换提交申请表单 end*************************************************/

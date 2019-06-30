@@ -122,7 +122,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 /*��ƷĿ¼start*/
 /*���ñ���ͼ*/
 .bgImg{
-    background: url(../images/background.jpg) no-repeat;
+    background: url(../images/background.jpg) no-repeat fixed;
     background-size:cover;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -148,9 +148,12 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     height: 105px;
     background: linear-gradient(#d8d8d8, #ffffff);
 }
-.nav a:hover{
+.nav-class:hover{
     height: 105px;
     background: linear-gradient(#d8d8d8, #c8c9ca);
+}
+.nav ul li:last-child a{
+    background: url("../picture/miaosha.png") no-repeat left top;
 }
 .nav{
     height: 105px;
@@ -241,6 +244,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     color: #FFFFFF;
     font-weight: 300;
     height: 40px;
+    overflow: hidden;
 }
 .product a:hover{
     text-decoration: none;

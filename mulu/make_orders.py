@@ -11,6 +11,10 @@ from mulu.models import GoodsPage
 @csrf_protect
 def new_order(request):
     data = request.POST
+    try:
+        address = data['Address']
+    except Exception:
+        address = '虚拟商品不写地址'
     # 添加订单
     #try:
     order = Orders(

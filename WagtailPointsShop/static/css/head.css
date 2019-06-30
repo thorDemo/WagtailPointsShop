@@ -1,3 +1,8 @@
+.nav11 a:nth-child(3){
+    background-image: url("../picture/re.gif");
+    background-position: 110px top;
+    background-repeat: no-repeat;
+}
 body{
 	min-width:1000px;
 }

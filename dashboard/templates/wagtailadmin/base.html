@@ -2,11 +2,7 @@
 {% load wagtailadmin_tags wagtailcore_tags static i18n %}
 
 {% block furniture %}
-    <style type="text/css">
-        .result-list{
-            overflow: auto;
-        }
-    </style>
+
     <div class="nav-wrapper">
         <div class="inner">
             <a href="{% url 'wagtailadmin_home' %}" class="logo" title="Wagtail v.{% wagtail_version %}">
@@ -42,6 +38,21 @@
             </div>
             <div id="nav-toggle" class="nav-toggle icon text-replace">{% trans "Menu" %}</div>
             {% block content %}{% endblock %}
+            {% if request.path == '/admin/points/points/' %}
+                <script type="text/javascript">
+                    let w1 = document.body.clientHeight - 75;
+                    $(".result-list").height(w1);
+                </script>
+                <style>
+                    body{
+                        overflow: hidden;
+                    }
+                    .result-list{
+                        overflow: scroll;
+                    }
+                    .result-list-height{}
+                </style>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

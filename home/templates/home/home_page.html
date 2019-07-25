@@ -6,7 +6,7 @@
 
 {% block type_list %}
     <a href="/" class="active">首页</a>
-    {% for post in page.get_children %}
+    {% for post in page.get_children.live %}
         <a href="{% pageurl post %}">{{ post.title }}</a>
     {% endfor %}
 {% endblock %}

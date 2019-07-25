@@ -20,34 +20,8 @@ class AccountIndexPage(Page):
         # 获取栏目
         brother = self.get_siblings()
         context['brother'] = brother
-        # todo
-        # # 单点登录
-        # # 数据库中得有一张users表
-        # # user = list(Users.objects.filter(username=username, password=password).values())
-        # # 用户信息记录在session中
-        # # request.session['user'] = user
-        # request.session['user'] = request.user
-        # # 创建session,否则key为None
-        # if not request.session.session_key:
-        #     request.session.create()
-        #     # 获取session_key
-        #     key = request.session.session_key
-        # # 当另一机器登录时，本机器应该被挤下即当前sessionkey失效，后登录的用户的session可用，之前的sessionkey从数据库中删除
-        # # 获取指定key的session_data，下面用的ORM模型去数据库中取数据
-        # session_data = list(DjangoSession.objects.filter(session_key=key).values_list('session_data'))[0][0]
-        # # 删除key不为当前key，session_data等于当前session_data的session记录，从而达到一个账号只能一台机器登录的目的
-        # models.DjangoSession.objects.filter(session_data=session_data).exclude(session_key=key).delete()
-
+        # todo 单点登录
         # 获取订单
-        try:
-            v = VipList.objects.filter(user_name=self.user_name)
-            if len(v) == 0:
-                context['vip'] = '0'
-            else:
-                context['vip'] = '1'
-        except VipList.DoesNotExist:
-            context['vip'] = '0'
-        print(context['vip'])
         self.orders = Orders.objects.filter(user_name=self.user_name).order_by('update_time')
         paginator = Paginator(self.orders, 6)  # Show 3 resources per page
         try:
@@ -80,14 +54,15 @@ class AccountIndexPage(Page):
         context['orders'] = orders_page
         context['total_points'] = self._total_points()
         context['current_points'] = self._current_points()
-        context['level'] = self._user_level()
-        # todo 升级需要积分
+        context['level'] = self._user_level() + 1
+        context['ico'] = self._user_level()
+        context['level_up_1'], context['level_up_2'] = self._level_up_total_capital()
         return context
 
     def _user_level(self):
         # 月流水计算 扣除加减积分
         p = Points.objects.filter(user_name__exact=self.user_name)[0]
-        return p.user_level
+        return p.商城等级()
 
     def _total_points(self):
         water_to_point = self.config.water_to_point
@@ -112,4 +87,20 @@ class AccountIndexPage(Page):
                 cost = cost + line.cost
         return points - cost
 
-
+    def _level_up_total_capital(self):
+        if self._user_level() == 0:
+            return self.config.discount_one_water, self.config.discount_one_slot_machine
+        elif self._user_level() == 1:
+            return self.config.discount_two_water, self.config.discount_two_slot_machine
+        elif self._user_level() == 2:
+            return self.config.discount_three_water, self.config.discount_three_slot_machine
+        elif self._user_level() == 3:
+            return self.config.discount_four_water, self.config.discount_four_slot_machine
+        elif self._user_level() == 4:
+            return self.config.discount_five_water, self.config.discount_five_slot_machine
+        elif self._user_level() == 5:
+            return self.config.discount_special_water, self.config.discount_special_slot_machine
+        elif self._user_level() == 6:
+            return 0, 0
+        else:
+            return self.config.discount_one_water, self.config.discount_one_slot_machine

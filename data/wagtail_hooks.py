@@ -12,7 +12,8 @@ import traceback
 import datetime
 from dateutil.relativedelta import relativedelta
 import pytz
-from points.models import Points, Add
+from points.models import Points
+from django.core.cache import cache
 
 
 class User:
@@ -95,12 +96,10 @@ def flush_month_data(user_name, proxy):
     :param proxy:
     :return:
     """
-    tz = pytz.timezone('America/New_York')
-    now = datetime.datetime.now(tz)
-    delta = datetime.timedelta(days=-30)
-    n_days = now + delta
-
-    source_data = DataIndexPage.objects.filter(user__exact=user_name).filter(date__gte=n_days)
+    # 美东时间计算上个月整月流水
+    fist = datetime.date(datetime.date.today().year, datetime.date.today().month - 1, 1) - datetime.timedelta(1)
+    last = datetime.date(datetime.date.today().year, datetime.date.today().month, 1) - datetime.timedelta(2)
+    source_data = DataIndexPage.objects.filter(user__exact=user_name).filter(date__gte=fist).filter(date__lte=last)
     user = User()
     user.user_name = user_name
     user.proxy = proxy
@@ -134,14 +133,13 @@ def flush_month_data(user_name, proxy):
 def flush_half_data(user_name, proxy):
     """
     # 美东时间 06-01 开始 半年时间的流水
-    # todo
     :param user_name:
     :param proxy:
     :return:
     """
     tz = pytz.timezone('America/New_York')
     now = datetime.datetime.now(tz)
-    delta = relativedelta(months=-1)
+    delta = relativedelta(months=-6)
     n_days = now + delta
     source_data = DataIndexPage.objects.filter(user__exact=user_name).filter(date__gte=n_days)
     user = User()
@@ -177,7 +175,6 @@ def flush_half_data(user_name, proxy):
 def flush_year_data(user_name, proxy):
     """
     # 美东时间 06-01 开始 一年时间的流水
-    # todo
     :param user_name:
     :param proxy:
     :return:
@@ -249,40 +246,21 @@ def flush_points_analysis(user_name):
 
 
 def insert_source_data_first(user, date):
-    source_data_old = DataIndexPage.objects.filter(user__exact=user.user_name).filter(date=date)
-    # print(user)
-    if len(source_data_old) == 0:
-        source_data = DataIndexPage(
-            proxy=user.proxy,
-            user=user.user_name,
-            capital_flow=user.capital_flow,
-            capital_return=user.capital_return,
-            sports=user.sports,
-            table=user.table,
-            slot_machine=user.slot_machine,
-            lottery=user.lottery,
-            fishing_machine=user.fishing_machine,
-            poker=user.poker,
-            date=date
-        )
-        source_data.save()
-    else:
-        # 如果有数据 当天全部删除 重新覆盖
-        DataIndexPage.objects.filter(date=date).delete()
-        source_data = DataIndexPage(
-            proxy=user.proxy,
-            user=user.user_name,
-            capital_flow=user.capital_flow,
-            capital_return=user.capital_return,
-            sports=user.sports,
-            table=user.table,
-            slot_machine=user.slot_machine,
-            lottery=user.lottery,
-            fishing_machine=user.fishing_machine,
-            poker=user.poker,
-            date=date
-        )
-        source_data.save()
+    source_data = DataIndexPage(
+        proxy=user.proxy,
+        user=user.user_name,
+        capital_flow=user.capital_flow,
+        capital_return=user.capital_return,
+        sports=user.sports,
+        table=user.table,
+        slot_machine=user.slot_machine,
+        lottery=user.lottery,
+        fishing_machine=user.fishing_machine,
+        poker=user.poker,
+        date=date
+    )
+    source_data.save()
+
     flush_month_data(user.user_name, user.proxy)
     flush_half_data(user.user_name, user.proxy)
     flush_year_data(user.user_name, user.proxy)
@@ -291,45 +269,20 @@ def insert_source_data_first(user, date):
 
 def insert_source_data_second(user, date):
     # print(user)
-    source_data_old = DataIndexPage.objects.filter(user__exact=user.user_name).filter(date=date)
-    if len(source_data_old) == 0:
-        source_data = DataIndexPage(
-            proxy=user.proxy,
-            user=user.user_name,
-            capital_flow=user.capital_flow,
-            capital_return=user.capital_return,
-            sports=user.sports,
-            table=user.table,
-            slot_machine=user.slot_machine,
-            lottery=user.lottery,
-            fishing_machine=user.fishing_machine,
-            poker=user.poker,
-            date=date
-        )
-        source_data.save()
-    else:
-        source_data = DataIndexPage(
-            proxy=user.proxy,
-            user=user.user_name,
-            capital_flow=Decimal(float(user.capital_flow) +
-                                 source_data_old[0].capital_flow).quantize(Decimal('0.00')),
-            capital_return=Decimal(float(user.capital_return) +
-                                   source_data_old[0].capital_return).quantize(Decimal('0.00')),
-            sports=Decimal(float(user.sports) +
-                           source_data_old[0].sports).quantize(Decimal('0.00')),
-            table=Decimal(float(user.table) +
-                          source_data_old[0].table).quantize(Decimal('0.00')),
-            slot_machine=Decimal(float(user.slot_machine) +
-                                 source_data_old[0].slot_machine).quantize(Decimal('0.00')),
-            lottery=Decimal(float(user.lottery) +
-                            source_data_old[0].lottery).quantize(Decimal('0.00')),
-            fishing_machine=Decimal(float(user.fishing_machine) +
-                                    source_data_old[0].fishing_machine).quantize(Decimal('0.00')),
-            poker=Decimal(float(user.poker) +
-                          source_data_old[0].poker).quantize(Decimal('0.00')),
-            date=date
-        )
-        source_data.save()
+    source_data = DataIndexPage(
+        proxy=user.proxy,
+        user=user.user_name,
+        capital_flow=user.capital_flow,
+        capital_return=user.capital_return,
+        sports=user.sports,
+        table=user.table,
+        slot_machine=user.slot_machine,
+        lottery=user.lottery,
+        fishing_machine=user.fishing_machine,
+        poker=user.poker,
+        date=date
+    )
+    source_data.save()
     flush_month_data(user.user_name, user.proxy)
     flush_half_data(user.user_name, user.proxy)
     flush_year_data(user.user_name, user.proxy)
@@ -337,6 +290,7 @@ def insert_source_data_second(user, date):
 
 
 def admin_view(request):
+    cache.set("progress", 1)
     filename = str(request.path).split('/')[3]
     # 判断文件是否全部上传
     if filename.endswith('02.xls'):
@@ -360,7 +314,10 @@ def admin_view(request):
 
     try:
         # 先读取第一个文件
+        # 如果有当天的数据 全部删除 重新载入
+        DataIndexPage.objects.filter(date__exact=date).delete()
         dom_tree = parse('media/documents/%s-01.xls' % date)
+        cache.set("progress", 5)
         collection = dom_tree.documentElement
         rows = collection.getElementsByTagName("Row")
         first_row = rows[0].getElementsByTagName("Data")
@@ -387,6 +344,9 @@ def admin_view(request):
                 address_poker.append(ip)
             ip += 1
         temp_row = 0
+        x1 = len(rows)
+        cache.set("progress", 10)
+        x2 = 70 / x1
         for row in rows:
             if temp_row == 0:
                 # 第一行过滤
@@ -419,10 +379,15 @@ def admin_view(request):
                 data_temp += 1
             # 行号 +1
             temp_row += 1
+
             # 插入源数据
             insert_source_data_first(user, date)
+            num_progress = float(cache.get('progress'))
+            num_progress = num_progress + x2
+            cache.set("progress", num_progress)
 
         # 然后读取第二个文件
+        cache.set("progress", 80)
         dom_tree = parse('media/documents/%s-02.xls' % date)
         collection = dom_tree.documentElement
         rows = collection.getElementsByTagName("Row")
@@ -450,6 +415,8 @@ def admin_view(request):
                 address_poker.append(ip)
             ip += 1
         temp_row = 0
+        y1 = len(rows)
+        y2 = 20 / y1
         for row in rows:
             if temp_row == 0:
                 # 第一行过滤
@@ -485,15 +452,17 @@ def admin_view(request):
             temp_row += 1
             # 插入源数据
             insert_source_data_second(user, date)
+            num_progress = float(cache.get('progress'))
+            num_progress += y2
+            cache.set("progress", num_progress)
 
     except Exception as e:
         traceback.print_exc(e)
         message = {
-            'result': '文件 %s 错误，请检查数据文件' % other_name,
+            'result': '文件 %s 错误，请检查数据文件 %s' % (other_name, e),
             'status': 0,
         }
         return JsonResponse(message)
-
     message = {
         'result': filename,
         'status': 1,
@@ -501,8 +470,20 @@ def admin_view(request):
     return JsonResponse(message)
 
 
+def submit_query_view(request):
+    num_progress = cache.get("progress")
+    return JsonResponse({'status': int(num_progress)})
+
+
 @hooks.register('register_admin_urls')
 def urlconf_time():
     return [
         url(r'^deal/[\d\-]+.xls', admin_view)
+    ]
+
+
+@hooks.register('register_admin_urls')
+def submit_query():
+    return [
+        url(r'deal/submit_query/', submit_query_view)
     ]

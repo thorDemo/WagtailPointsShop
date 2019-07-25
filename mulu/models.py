@@ -94,7 +94,7 @@ class GoodsSortPage(Page):
         brother = self.get_siblings()
         context['brother'] = brother
         farther = self.get_parent()
-        parents = farther.get_siblings()
+        parents = farther.get_siblings().live()
         context['farther'] = farther
         context['parents'] = parents
         #
@@ -188,33 +188,23 @@ class GoodsPage(Page):
         return context
 
     def _user_level(self):
-        month_water = int(self._points.one_month_capital_flow + self._points.当月异常流水())
-        discount_one_water = int(self.config.discount_one_water)
-        discount_two_water = int(self.config.discount_two_water)
-        discount_three_water = int(self.config.discount_three_water)
-        discount_four_water = int(self.config.discount_four_water)
-        discount_five_water = int(self.config.discount_five_water)
-        discount_six_water = int(self.config.discount_six_water)
-        discount_seven_water = int(self.config.discount_seven_water)
-        discount_eight_water = int(self.config.discount_eight_water)
-        if month_water < discount_one_water:
-            return 0, 1
-        elif month_water < discount_two_water:
-            return 1, self.config.discount_one_Percent
-        elif month_water < discount_three_water:
-            return 2, self.config.discount_two_Percent
-        elif month_water < discount_four_water:
-            return 3, self.config.discount_three_Percent
-        elif month_water < discount_five_water:
-            return 4, self.config.discount_four_Percent
-        elif month_water < discount_six_water:
-            return 5, self.config.discount_five_Percent
-        elif month_water < discount_seven_water:
-            return 6, self.config.discount_six_Percent
-        elif month_water < discount_eight_water:
-            return 7, self.config.discount_seven_Percent
-        else:
-            return 8, self.config.discount_eight_Percent
+        # 月流水计算 扣除加减积分
+        p = Points.objects.filter(user_name__exact=self.user_name)[0]
+        level = p.商城等级()
+        if level == 0:
+            return level, 1
+        elif level == 1:
+            return level, self.config.discount_one_Percent
+        elif level == 2:
+            return level, self.config.discount_two_Percent
+        elif level == 3:
+            return level, self.config.discount_three_Percent
+        elif level == 4:
+            return level, self.config.discount_four_Percent
+        elif level == 5:
+            return level, self.config.discount_five_Percent
+        elif level == 6:
+            return level, self.config.discount_special_Percent
 
     def _total_points(self):
         water_to_point = self.config.water_to_point

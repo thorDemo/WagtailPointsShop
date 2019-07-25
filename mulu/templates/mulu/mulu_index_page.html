@@ -7,7 +7,7 @@
 
 {% block type_list %}
     <a href="/">首页</a>
-    {% for post in brother %}
+    {% for post in brother.live %}
         {% if self.title == post.title %}
             <a href="{% pageurl post %}" class="active">{{ post.title }}</a>
         {% else %}
@@ -29,7 +29,7 @@
                             <img src="{{ photo.url }}" alt="{{ photo.alt }}">
                             <p>&nbsp;&nbsp;&nbsp;首页&nbsp;&nbsp;&nbsp;</p>
                         </a>
-                        {% for post in page.get_children %}
+                        {% for post in page.get_children.live %}
                             {% with post=post.specific %}
                                 <li class="nav-class">
                                     <a href="{% pageurl post %}">

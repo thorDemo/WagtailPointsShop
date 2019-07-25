@@ -152,9 +152,9 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     height: 105px;
     background: linear-gradient(#d8d8d8, #c8c9ca);
 }
-.nav ul li:last-child a{
-    background: url("../picture/miaosha.png") no-repeat left top;
-}
+/*.nav ul li:last-child a{*/
+    /*background: url("../picture/miaosha.png") no-repeat left top;*/
+/*}*/
 .nav{
     height: 105px;
     margin: 0 auto;
@@ -556,7 +556,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 .zhzx-left{
     float: left;
     width: 320px;
-    height: 420px;
+    height: 445px;
     background: -webkit-linear-gradient(#45414e, #232323); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#45414e, #232323); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#45414e, #232323); /* Firefox 3.6 - 15 */
@@ -564,7 +564,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 }
 .zhzx-left-1{
     width: 290px;
-    height: 390px;
+    height: 415px;
     text-align: center;
     margin: 15px;
     padding: 15px;

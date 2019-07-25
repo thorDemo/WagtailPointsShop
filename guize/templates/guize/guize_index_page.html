@@ -5,7 +5,7 @@
 
 {% block type_list %}
     <a href="/">首页</a>
-    {% for post in brother %}
+    {% for post in brother.live %}
         {% if self.title == post.title %}
             <a href="{% pageurl post %}" class="active">{{ post.title }}</a>
         {% else %}

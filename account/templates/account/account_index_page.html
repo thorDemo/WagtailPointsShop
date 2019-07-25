@@ -8,7 +8,7 @@
 
 {% block type_list %}
     <a href="/">首页</a>
-    {% for post in brother %}
+    {% for post in brother.live %}
         {% if self.title == post.title %}
             <a href="{% pageurl post %}" class="active">{{ post.title }}</a>
         {% else %}
@@ -25,30 +25,39 @@
         <div class="zhzx-left">
             <div class="zhzx-left-1">
                 <p class="username">{{ user.username }}</p>
-                {% if vip == '0' %}
-                <img style="padding: 20px 0" src="{% static 'images/icon.png' %}" alt=""/>
-                {% else %}
-                <img style="padding: 20px 0" src="{% static 'images/vip.png' %}" alt=""/>
-                {% endif %}
-                <div style="text-align: center;display: inline-block"><p class="usertxt">当前会员等级 &nbsp;{{ level }}&nbsp;&nbsp;</p>
+                <img src="{% static 'images' %}/account_{{ ico }}.png" alt=""/>
+                <div style="text-align: center;display: inline-block; padding-top: 10px"><p class="usertxt">当前会员等级 &nbsp;{{ level }}&nbsp;&nbsp;</p>
                     <p class="userlevel">Lv.{{ level }}</p></div>
-                <div style="text-align: center;height: 45px;margin: 10px 0"><p class="restxt">剩余积分</p>
+                <div style="text-align: center;height: 45px;"><p class="restxt">剩余积分</p>
                     <p class="res-value">&nbsp;{{ current_points }}</p></div>
-                <div style="border: 0.1rem solid #c8c9ca;transform: scaleY(0.2);margin: 15px 0"></div>
-
-                <div class="upgrade"><p>升级条件：</p>
-                    {% if up_need == -1 %}
-                        <p></p>
-                        <p class="upgrade-value">已经达到最高等级</p>
-                        <p></p>
+                <div style="border: 0.1rem solid #c8c9ca;transform: scaleY(0.2);margin: 10px 0"></div>
+                <div>
+                    <div style="margin-bottom: 5px">
+                        <span style="color: #ffdd5d;">升级条件（2选1）</span>
+                    </div>
+                    {% if level_up_1 == 0 %}
+                         <div>
+                            <ul>
+                                <li style="text-align: center;">
+                                    <span style="color: #d8d8d8 ;">已经达到最高等级!!!</span>
+                                </li>
+                            </ul>
+                        </div>
                     {% else %}
-                    <p>30天内赚</p>
-                    <p class="upgrade-value">{{ up_need }}</p>
-                    <p>个积分</p>
-                    {% endif %}
-
+                        <div>
+                            <ul>
+                                <li style="text-align: center;">
+                                    <span style="color: #d8d8d8 ;">1. 30天内总流水达到</span>
+                                    <span style="color: #ffdd5d;">{{ level_up_1 }}</span>
+                                </li>
+                                <li style="text-align: center;">
+                                    <span style="color: #d8d8d8;">2. 30天内老虎机流水达到</span>
+                                    <span style="color: #ffdd5d;">{{ level_up_2 }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                     {% endif %}
                 </div>
-                <p></p>
             </div>
         </div>
         <!--右边账户订单详情-->

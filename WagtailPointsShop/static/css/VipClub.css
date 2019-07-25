@@ -1,59 +1,87 @@
-/******************************************VIP俱乐部专属特权*******************************************/
-.bmw-welfare ul{
+.bmw-special{
     margin-bottom: 50px;
 }
-.bmw-welfare-3{
+.bmw-special-title{
+    background-color: rgba(43,0,0,0.8);
+    height: 62px;
+    vertical-align: middle;
+}
+.bmw-special-title p{
     display: inline-block;
+    font-size: 25px;
+    color: #FFFFFF;
+    font-weight: bold;
+    margin-bottom: 45px;
+    vertical-align: middle;
 }
-.bmw-welfare-3 li{
-    width: 317px;
-    height: 268px;
-    border: 1px solid #626262;
+.bmw-special-title img{
+    margin-right: 10px;
+    margin-top: 6px;
+}
+.bmw-special ul{
+    margin: 0 auto;
+    height: 237px;
+    margin-top: 20px;
+    text-align: center;
+}
+.bmw-special ul li{
+    position: relative;
+    width: 166px;
+    height: 237px;
     float: left;
+    background-color: #FAF4E6;
+    opacity: 0.9;
+    display:-webkit-box;
+    -webkit-box-pack:center;
 }
-.bmw-welfare-3 li:nth-child(2),.bmw-welfare-3 li:nth-child(3){
-    margin-left: 24px;
+.bmw-special ul li:hover{
+    opacity: 1;
 }
-.bmw-welfare-3 div{
+.bmw-special ul li div:first-child{
     position: absolute;
+    width: 166px;
+    height: 91px;
+    top: 30px;
 }
-.bmw-welfare-3 p{
-    color: #d8d8d8;
-    width: 315px;
-    height: 48px;
-    line-height: 48px;
-    text-align: center;
-    font-size: 22px;
-    font-weight: bold;
+.bmw-special ul li:first-child div:first-child img{
+    position: absolute;
+    top: 35px;
+    right: 40px;
+    vertical-align: middle;
+}
+.bmw-special ul li:not(:first-child) div:first-child img{
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    vertical-align: middle;
+}
+.bmw-special ul li:nth-child(5) div:first-child img{
+    position: absolute;
+    top: 5px;
+    right: 40px;
+    vertical-align: middle;
+}
+.bmw-special ul li div:nth-child(3){
     position: relative;
-    bottom: 49px;
-    background-color: rgba(160,160,160,0.4);
+    bottom: -157px;
+    display: inline-block
 }
-.bmw-welfare-4{
-    display: inline-block;
-}
-.bmw-welfare-4 li{
-    width: 236px;
-    height: 200px;
-    border: 1px solid #626262;
-    float: left;
-}
-.bmw-welfare-4 li:nth-child(2),.bmw-welfare-4 li:nth-child(3),.bmw-welfare-4 li:nth-child(4){
-    margin-left: 18px;
-}
-.bmw-welfare-4 p{
-    color: #d8d8d8;
-    width: 234px;
-    height: 48px;
-    line-height: 48px;
-    text-align: center;
-    font-size: 22px;
+.bmw-special ul li div p:first-child{
+    font-size: 16px;
+    color: #706753;
     font-weight: bold;
-    position: relative;
-    bottom: 49px;
-    background-color: rgba(160,160,160,0.4);
 }
-
+.bmw-special ul li div p:last-child{
+    font-size: 10px;
+    color: #706753;
+    font-weight: bold;
+}
+.bmw-special ul li img:nth-child(2){
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    opacity: 0.7;
+}
 /*vip晋级要求*/
 .bmw-require > p,.bmw-welfare > p,.bmw-rules > p{
     height: 35px;
@@ -71,6 +99,7 @@
 .bmw-require table,.bmw-welfare table{
     height: 595px;
     border-collapse: collapse;
+    word-wrap: break-word; word-break: break-all;
 }
 .bmw-require table td,.bmw-welfare table td{
     font-size: 15px;
@@ -90,31 +119,41 @@
 .bmw-require table tr:last-child td {
     border-bottom: 0;
 }
-.bmw-require table tr td:last-child {
-    width: 875px;
+.bmw-require table tr td:nth-child(2) {
+    width: 70%;
     color: #626262;
-    border-right: 0;
+    border-right: 1px solid #888;
+    background:-webkit-linear-gradient(top,#d8d8d8,#ffffff);
+}
+.bmw-require table tr td:nth-child(3) {
+    width: 300px;
+    color: #626262;
+    border-right: 1px solid #888;
     background:-webkit-linear-gradient(top,#d8d8d8,#ffffff);
 }
 .bmw-require table tr td:first-child{
     position: relative;
-    width: 125px;
+    width: 12.5%;
     color: #d8d8d8;
+    padding-bottom: 0;
     background:-webkit-linear-gradient(top,#45414e,#232323);
 }
 .bmw-require table tr td:first-child img{
     position: absolute;
-    top: 10px;
-    right: 34px;
+    top: 3px;
+    right: 28px;
+    width: 70px;
 }
-
 .bmw-require table tr:first-child td{
+    /*color: #d8d8d8;*/
     background:-webkit-linear-gradient(top,#2b0000,#5f0000);
 }
-
-.bmw-require table tr:first-child td:last-child{
-    width: 875px;
+.bmw-require table tr:first-child td:nth-child(2){
+    width: 800px;
     color: #d8d8d8;
+}
+.bmw-require table tr td:last-child{
+    border-right:0;
 }
 /*VIP享受福利*/
 .bmw-welfare table td{
@@ -141,6 +180,7 @@
 }
 .welfare-b table tr:first-child td:not(:first-child) img{
     position: absolute;
-    top: 10px;
-    right: 34px;
+    top: 3px;
+    right: 27px;
+    width: 70px;;
 }

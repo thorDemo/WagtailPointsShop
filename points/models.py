@@ -38,7 +38,6 @@ class Points(models.Model):
 
     def 剩余积分(self):
         # 获取积分配置信息
-        self.config = PointConfig.objects.get(id=1)
         self.orders = Orders.objects.filter(user_name=self.user_name).order_by('update_time')
         points = self.总积分()
         cost = 0
@@ -47,105 +46,32 @@ class Points(models.Model):
                 cost = cost + line.cost
         return points - cost
 
-    def vip(self):
+    def 官网等级(self):
         # 获取VIP状态
         try:
             v = VipList.objects.filter(user_id=self.user_name)
             if len(v) == 0:
-                vip = '0'
+                vip = '无'
             else:
-                vip = '1'
+                vip = v[0].user_level
         except VipList.DoesNotExist:
-            vip = '0'
+            vip = '无'
         return vip
 
     def 商城等级(self):
-        # todo
-        # 会员等级
-        self.config = PointConfig.objects.get(id=1)
-        month_water = self.one_month_capital_flow + self.当月异常流水()
-        # 当月老虎机流水
-        user_month_data = MonthDataStatistic.objects.filter(user__exact=self.user_name)
-        if len(user_month_data) == 0:
-            slot_machine = 0
-        else:
-            slot_machine = int(user_month_data[0].slot_machine)
-        # 老虎机流水标准
-        discount_one_slot_machine = int(self.config.discount_one_slot_machine)
-        discount_two_slot_machine = int(self.config.discount_two_slot_machine)
-        discount_three_slot_machine = int(self.config.discount_three_slot_machine)
-        discount_four_slot_machine = int(self.config.discount_three_slot_machine)
-        discount_five_slot_machine = int(self.config.discount_three_slot_machine)
-
-        # 总流水标准
-        discount_one_water = int(self.config.discount_one_water)
-        discount_two_water = int(self.config.discount_two_water)
-        discount_three_water = int(self.config.discount_three_water)
-        discount_four_water = int(self.config.discount_four_water)
-        discount_five_water = int(self.config.discount_five_water)
-        # moth_water = 1000w  slot_machine = 20k
-        all_capital_level = 0
-        slot_machine_level = 0
-        current_level = self.user_level
-
-        tz = pytz.timezone('America/New_York')
-        now = datetime.datetime.now(tz).date().day
-
-        # VipList.objects.filter(user_name__exact=self.user_name)
-
-        if int(now) == 1:   #如果当前时间是美东时间的 1号 就开始计算等级 不是的话返回当前等级
-            if month_water == 0:
-                # 如果月流水为0  查询用户最后玩的是哪天 每超过一个月 扣一个等级
-                try:
-                    last_date = DataIndexPage.objects.filter(user__exact=self.user_name).order_by('-date')[0].date
-                    now_date = datetime.datetime.now(tz).date().month
-                    temp_date = int(now_date - last_date.month)
-                    current_level -= temp_date
-                except IndexError:
-                    # 如果查询不到 扣其实时间到现在月份的数量
-                    now_date = datetime.datetime.now(tz).date().month
-                    temp_date = int(now_date - datetime.date(2019, 6, 1).month)
-                    current_level -= temp_date
-            else:
-                if month_water < discount_one_water:
-                    all_capital_level = 0
-                elif month_water < discount_two_water:
-                    all_capital_level = 1
-                elif month_water < discount_three_water:
-                    all_capital_level = 2
-                elif month_water < discount_four_water:
-                    all_capital_level = 3
-                elif month_water < discount_five_water:
-                    all_capital_level = 4
-                else:
-                    all_capital_level = 5
-
-                if slot_machine <= discount_one_slot_machine:
-                    slot_machine_level = 0
-                elif slot_machine < discount_two_slot_machine:
-                    slot_machine_level = 1
-                elif slot_machine < discount_three_slot_machine:
-                    slot_machine_level = 2
-                elif slot_machine < discount_four_slot_machine:
-                    slot_machine_level = 3
-                elif slot_machine < discount_five_slot_machine:
-                    slot_machine_level = 4
-                else:
-                    slot_machine_level = 5
-            # hamham1995
-            all_level = [all_capital_level, slot_machine_level, current_level]
-            # 保存数据
-            Points.objects.filter(user_name__exact=self.user_name).update(user_level=max(all_level))
-            return max(all_level)
-        else:
-            return self.user_level
+        try:
+            v = VipList.objects.filter(user_id__exact=self.user_name)[0]
+            return v.shop_level
+        except IndexError:
+            return 0
 
     def 总积分(self):
         # 获取积分配置信息
+        self.config = PointConfig.objects.get(id=1)
         water_to_point = self.config.water_to_point
         # 积分修改
         try:
-            VipList.objects.get(user_name=self.user_name)
+            VipList.objects.get(user_id=self.user_name)
             all_water = self.one_year_capital_flow
             # 积分 加减控制
             points = int((all_water + self.一年异常流水()) / water_to_point)

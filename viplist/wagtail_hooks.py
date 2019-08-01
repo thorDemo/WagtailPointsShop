@@ -1,7 +1,7 @@
+# -*- coding=utf-8 -*-
 from wagtail.contrib.modeladmin.options import (
     ModelAdmin, modeladmin_register, ModelAdminGroup)
 from .models import VipList, VipSetting
-from wagtail.admin import widgets as wagtailadmin_widgets
 from wagtail.core import hooks
 from django.conf.urls import url
 from django.http import JsonResponse
@@ -39,10 +39,9 @@ class LibraryGroup(ModelAdminGroup):
 modeladmin_register(LibraryGroup)
 
 
-def init_vip_data(request):
+def init_vip_data():
     """
     导入VIP数据
-    :param request:
     :return:
     """
     data = open('viplist/vip.txt', 'r', encoding='utf-8')
@@ -75,6 +74,7 @@ def flush_vip_data(request):
     ]
 
     all_data = MonthDataStatistic.objects.all()
+    # all_data = MonthDataStatistic.objects.filter(user__exact='Thor')
     for line in all_data:
         x1 = int(line.capital_flow)
         x2 = int(line.slot_machine)
@@ -107,164 +107,166 @@ def flush_vip_data(request):
         print('用户名：%s 总流水：%s  老虎机流水%s  计算等级：%s' % (line.user, line.capital_flow, line.slot_machine, level))
 
         v = VipList.objects.filter(user_id__exact=line.user)
-        if len(v) == 0:     #无数据
-            if level == 1:
+        if len(v) == 0:
+            if level == 0:      # 如果计算出来等级为0 同事列表里面又不存在 就什么都木有
                 target = VipList(
                     user_id=line.user,
                     user_name='未知',
                     user_level='未知',
                     shop_level=level,
-                    level_up=0b100000,
-                    flag_level=1,
-                    flag_money=1,
-                    current_level_up_money=y[0]
+                    level_up=0b000000,
+                    flag_level=0,
+                    flag_money=0,
+                    current_level_up_money=0
                 )
                 target.save()
-            elif level == 2:
+                print(1)
+            else:
+                # 没有记录 就是升级
                 target = VipList(
                     user_id=line.user,
                     user_name='未知',
                     user_level='未知',
                     shop_level=level,
-                    level_up=0b010000,
+                    level_up=0b100000 >> (level - 1),
                     flag_level=1,
                     flag_money=1,
-                    current_level_up_money=y[1]
+                    current_level_up_money=y[level - 1]
                 )
                 target.save()
-            elif level == 3:
-                target = VipList(
-                    user_id=line.user,
-                    user_name='未知',
-                    user_level='未知',
-                    shop_level=level,
-                    level_up=0b001000,
-                    flag_level=1,
-                    flag_money=1,
-                    current_level_up_money=y[2]
-                )
-                target.save()
-            elif level == 4:
-                target = VipList(
-                    user_id=line.user,
-                    user_name='未知',
-                    user_level='未知',
-                    shop_level=level,
-                    level_up=0b000100,
-                    flag_level=1,
-                    flag_money=1,
-                    current_level_up_money=y[3]
-                )
-                target.save()
-            elif level == 5:
-                target = VipList(
-                    user_id=line.user,
-                    user_name='未知',
-                    user_level='未知',
-                    shop_level=level,
-                    level_up=0b000010,
-                    flag_level=1,
-                    flag_money=1,
-                    current_level_up_money=y[4]
-                )
-                target.save()
+                print(2)
+
         else:       # 有数据
             if v[0].user_level == '大客层':
-                if x1 < 1500000:
+                if level == 0:
                     v.update(
-                        shop_level=5,
-                        level_up=0b111111,
-                        flag_level=1,
+                        shop_level=v[0].shop_level - 1,  # 降级减一
+                        level_up=0b111111,  # 不管是否升级 和之前的记录是一样的
+                        flag_level=0,
                         flag_money=0,
                         current_level_up_money=0
                     )
+                    print(3)
                 else:
+                    if v[0].shop_level > level:
+                        # 降级
+                        if v[0].shop_level == 1 and x1 < 50000 and x2 < 20000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 2 and x1 < 200000 and x2 < 120000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 3 and x1 < 500000 and x2 < 300000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 4 and x1 < 800000 and x2 < 500000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 5 and x1 < 1000000 and x2 < 600000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 6 and x1 < 1500000 and x2 < 1000000:
+                            shop_level = v[0].shop_level - 1
+                        else:
+                            shop_level = v[0].shop_level
+                    else:
+                        # 升级
+                        shop_level = level
+                    current_flag_level = 0 if shop_level <= v[0].shop_level else 1  # 判定用户是否升级
                     v.update(
-                        shop_level=6,
+                        shop_level=shop_level,
                         level_up=0b111111,
-                        flag_level=1,
+                        flag_level=current_flag_level,
                         flag_money=0,
                         current_level_up_money=0
                     )
+                    print(4)
             elif v[0].user_level in ['第十二层', '第十层', '永利博VIP']:
-                if x1 < 1000000 and x2 < 6000000:
+                if level == 0:
                     v.update(
-                        shop_level=4,
-                        level_up=0b111110,
-                        flag_level=1,
+                        shop_level=v[0].shop_level - 1,  # 降级减一
+                        level_up=v[0].shop_level,   # 不管是否升级 和之前的记录是一样的
+                        flag_level=0,
                         flag_money=0,
                         current_level_up_money=0
                     )
+                    print(5)
                 else:
+                    if v[0].shop_level > level:
+                        # 降级
+                        if v[0].shop_level == 1 and x1 < 50000 and x2 < 20000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 2 and x1 < 200000 and x2 < 120000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 3 and x1 < 500000 and x2 < 300000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 4 and x1 < 800000 and x2 < 500000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 5 and x1 < 1000000 and x2 < 600000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 6 and x1 < 1500000 and x2 < 1000000:
+                            shop_level = v[0].shop_level - 1
+                        else:
+                            shop_level = v[0].shop_level
+                    else:
+                        # 升级
+                        shop_level = level
+                    level_up = v[0].level_up
+                    current_flag_level = 0 if shop_level <= v[0].shop_level else 1           # 判定用户是否升级
+                    current_level_up = 0b100000 >> (level - 1) | level_up                    # 当前用户升级标识
+                    current_status = 0b100000 >> (level - 1) & level_up
+                    current_flag_money = 0 if current_status == (0b100000 >> (level - 1)) else 1    # 升级历史查询
+                    #  不能领钱输出0
+                    current_level_up_money = y[level - 1] if current_flag_level & current_flag_money else 0
                     v.update(
-                        shop_level=5,
-                        level_up=0b111110,
-                        flag_level=1,
-                        flag_money=0,
-                        current_level_up_money=0
+                        shop_level=shop_level,
+                        level_up=current_level_up,
+                        flag_level=current_flag_level,
+                        flag_money=current_flag_money,
+                        current_level_up_money=current_level_up_money
                     )
+                    print(6)
             else:
                 if level == 0:
-                    continue
-                elif level == 1:
                     v.update(
-                        shop_level=level,
-                        level_up=0b100000,
-                        flag_level=1,
-                        flag_money=1,
-                        current_level_up_money=y[0]
+                        shop_level=v[0].shop_level - 1,  # 降级减一
+                        level_up=v[0].shop_level,  # 不管是否升级 和之前的记录是一样的
+                        flag_level=0,
+                        flag_money=0,
+                        current_level_up_money=0
                     )
-                elif level == 2:
+                    print(7)
+                else:
+                    if v[0].shop_level > level:
+                        # 降级
+                        if v[0].shop_level == 1 and x1 < 50000 and x2 < 20000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 2 and x1 < 200000 and x2 < 120000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 3 and x1 < 500000 and x2 < 300000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 4 and x1 < 800000 and x2 < 500000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 5 and x1 < 1000000 and x2 < 600000:
+                            shop_level = v[0].shop_level - 1
+                        elif v[0].shop_level == 6 and x1 < 1500000 and x2 < 1000000:
+                            shop_level = v[0].shop_level - 1
+                        else:
+                            shop_level = v[0].shop_level
+                    else:
+                        # 升级
+                        shop_level = level
+                    level_up = v[0].level_up
+                    current_flag_level = 0 if shop_level <= v[0].shop_level else 1           # 判定用户是否升级
+                    current_level_up = 0b100000 >> (level - 1) | level_up                    # 当前用户升级标识
+                    current_status = 0b100000 >> (level - 1) & level_up
+                    current_flag_money = 0 if current_status == (0b100000 >> (level - 1)) else 1    # 升级历史查询
+                    #  不能领钱输出0
+                    current_level_up_money = y[level - 1] if current_flag_level & current_flag_money else 0
                     v.update(
-                        shop_level=level,
-                        level_up=0b010000,
-                        flag_level=1,
-                        flag_money=1,
-                        current_level_up_money=y[1]
+                        shop_level=shop_level,
+                        level_up=current_level_up,
+                        flag_level=current_flag_level,
+                        flag_money=current_flag_money,
+                        current_level_up_money=current_level_up_money
                     )
-                elif level == 3:
-                    v.update(
-                        shop_level=level,
-                        level_up=0b001000,
-                        flag_level=1,
-                        flag_money=1,
-                        current_level_up_money=y[2]
-                    )
-                elif level == 4:
-                    v.update(
-                        shop_level=level,
-                        level_up=0b000100,
-                        flag_level=1,
-                        flag_money=1,
-                        current_level_up_money=y[3]
-                    )
-                elif level == 5:
-                    v.update(
-                        shop_level=level,
-                        level_up=0b000010,
-                        flag_level=1,
-                        flag_money=1,
-                        current_level_up_money=y[4]
-                    )
+                    print(8)
 
-    vip_data = VipList.objects.filter(current_level_up_money=0)
-    for line in vip_data:
-        if line.user_level == '大客层':
-            VipList.objects.filter(user_id=line.user_id).update(
-                shop_level=5,
-                level_up=0b111111,
-                flag_level=1,
-                flag_money=0,
-                current_level_up_money=0
-            )
-        elif line.user_level in ['第十二层', '第十层', '永利博VIP']:
-            VipList.objects.filter(user_id=line.user_id).update(
-                shop_level=4,
-                level_up=0b111110,
-                flag_level=1,
-                flag_money=0,
-                current_level_up_money=0
-            )
     return JsonResponse({'status': 'success'})
 
 
@@ -280,5 +282,3 @@ def submit_query():
     return [
         url(r'flush_vip_data/', flush_vip_data)
     ]
-
-

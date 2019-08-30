@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
-DEBUG = False
+# DEBUG = False
 
 # Application definition
-SESSION_COOKIE_SECURE=True
-SESSION_COOKIE_HTTPONLY=True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+# SESSION_COOKIE_SECURE=True
+# SESSION_COOKIE_HTTPONLY=True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
 INSTALLED_APPS = [
     'home',
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'viplist',
     'data',
     'documents',
+    'promotion',
     'django_crontab',
 
     'wagtail.contrib.forms',
@@ -132,7 +133,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://127.0.0.1:6379/",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -164,7 +165,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Shanghai'
+TIME_ZONE = 'US/Eastern'
 
 USE_I18N = True
 

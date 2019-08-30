@@ -14,6 +14,7 @@ from dateutil.relativedelta import relativedelta
 import pytz
 from points.models import Points
 from django.core.cache import cache
+from django.db import transaction
 
 
 class User:
@@ -96,9 +97,9 @@ def flush_month_data(user_name, proxy):
     :param proxy:
     :return:
     """
-    # 美东时间计算上个月整月流水
-    fist = datetime.date(datetime.date.today().year, datetime.date.today().month - 1, 1) - datetime.timedelta(1)
-    last = datetime.date(datetime.date.today().year, datetime.date.today().month, 1) - datetime.timedelta(2)
+    # 美东时间计算上个月整月流水 未扣除异常流水
+    fist = datetime.date(datetime.date.today().year, datetime.date.today().month - 1, 1)
+    last = datetime.date(datetime.date.today().year, datetime.date.today().month, 1) - datetime.timedelta(days=1)
     source_data = DataIndexPage.objects.filter(user__exact=user_name).filter(date__gte=fist).filter(date__lte=last)
     user = User()
     user.user_name = user_name
@@ -260,11 +261,10 @@ def insert_source_data_first(user, date):
         date=date
     )
     source_data.save()
-
-    flush_month_data(user.user_name, user.proxy)
-    flush_half_data(user.user_name, user.proxy)
-    flush_year_data(user.user_name, user.proxy)
-    flush_points_analysis(user.user_name)
+    # flush_month_data(user.user_name, user.proxy)
+    # flush_half_data(user.user_name, user.proxy)
+    # flush_year_data(user.user_name, user.proxy)
+    # flush_points_analysis(user.user_name)
 
 
 def insert_source_data_second(user, date):
@@ -283,10 +283,10 @@ def insert_source_data_second(user, date):
         date=date
     )
     source_data.save()
-    flush_month_data(user.user_name, user.proxy)
-    flush_half_data(user.user_name, user.proxy)
-    flush_year_data(user.user_name, user.proxy)
-    flush_points_analysis(user.user_name)
+    # flush_month_data(user.user_name, user.proxy)
+    # flush_half_data(user.user_name, user.proxy)
+    # flush_year_data(user.user_name, user.proxy)
+    # flush_points_analysis(user.user_name)
 
 
 def admin_view(request):
@@ -298,7 +298,7 @@ def admin_view(request):
         other_name = filename.replace('02.xls', '01.xls')
         if os.path.exists('media/documents/%s' % other_name) is False:
             message = {
-                'result': '文件 %s 缺失，需要同时上传两个平台的数据，请注意文件名' % other_name,
+                'result': 'files %s does not exists ' % other_name,
                 'status': 0,
             }
             return JsonResponse(message)
@@ -307,7 +307,7 @@ def admin_view(request):
         other_name = filename.replace('01.xls', '02.xls')
         if os.path.exists('media/documents/%s' % other_name) is False:
             message = {
-                'result': '文件 %s 缺失，需要同时上传两个平台的数据，请注意文件名' % other_name,
+                'result': 'files %s does not exists ' % other_name,
                 'status': 0,
             }
             return JsonResponse(message)
@@ -330,23 +330,30 @@ def admin_view(request):
         ip = 0
         for cell in first_row:
             name = str(cell.firstChild.data)
-            if name.startswith('体育赛事') and name.endswith('有效投注'):
+            if '体育' in name and name.endswith('有效总投注'):
+                # print('体育: %s' % name)
                 address_sports.append(ip)
-            elif name.startswith('视讯直播') and name.endswith('有效投注'):
+            elif ('视讯' in name or '視訊' in name or '赌神厅' in name) and name.endswith('有效总投注') and ip < 40:
+                # print('视讯:  %s' % name)
                 address_table.append(ip)
-            elif name.startswith('电子游艺') and name.endswith('有效投注'):
-                address_slot.append(ip)
-            elif name.startswith('彩票游戏') and name.endswith('有效投注'):
-                address_lottery.append(ip)
-            elif name.startswith('捕鱼机') and name.endswith('有效投注'):
+            elif '捕鱼' in name and name.endswith('有效总投注'):
+                # print('捕鱼:  %s' % name)
                 address_fishing.append(ip)
-            elif name.startswith('棋牌游戏') and name.endswith('有效投注'):
+            elif '棋牌' in name and name.endswith('有效总投注'):
+                # print('棋牌:  %s' % name)
                 address_poker.append(ip)
+            elif ('分彩' in name or '快开' in name or 'Keno' in name or '11选5' in name or '彩票' in name
+                  or '时时' in name or 'VR' in name) and name.endswith('有效总投注'):
+                # print('彩票:  %s' % name)
+                address_lottery.append(ip)
+            elif name.endswith('有效总投注') and ip > 2:
+                # print('老虎机:  %s' % name)
+                address_slot.append(ip)
             ip += 1
         temp_row = 0
         x1 = len(rows)
         cache.set("progress", 10)
-        x2 = 70 / x1
+        x2 = 30 / x1
         for row in rows:
             if temp_row == 0:
                 # 第一行过滤
@@ -356,8 +363,8 @@ def admin_view(request):
             user = User()
             user.proxy = all_data[0].firstChild.data
             user.user_name = all_data[1].firstChild.data
-            user.capital_flow = all_data[3].firstChild.data
-            user.capital_return = all_data[4].firstChild.data
+            user.capital_flow = all_data[2].firstChild.data
+            user.capital_return = all_data[3].firstChild.data
 
             # 数据处理
             data_temp = 0
@@ -381,13 +388,14 @@ def admin_view(request):
             temp_row += 1
 
             # 插入源数据
+            # print(user)
             insert_source_data_first(user, date)
             num_progress = float(cache.get('progress'))
             num_progress = num_progress + x2
             cache.set("progress", num_progress)
 
         # 然后读取第二个文件
-        cache.set("progress", 80)
+        cache.set("progress", 40)
         dom_tree = parse('media/documents/%s-02.xls' % date)
         collection = dom_tree.documentElement
         rows = collection.getElementsByTagName("Row")
@@ -401,18 +409,25 @@ def admin_view(request):
         ip = 0
         for cell in first_row:
             name = str(cell.firstChild.data)
-            if name.startswith('体育赛事') and name.endswith('有效投注'):
+            if '体育' in name and name.endswith('有效总投注'):
+                # print('体育: %s' % name)
                 address_sports.append(ip)
-            elif name.startswith('视讯直播') and name.endswith('有效投注'):
+            elif ('视讯' in name or '視訊' in name or '赌神厅' in name) and name.endswith('有效总投注') and ip < 40:
+                # print('视讯:  %s' % name)
                 address_table.append(ip)
-            elif name.startswith('电子游艺') and name.endswith('有效投注'):
-                address_slot.append(ip)
-            elif name.startswith('彩票游戏') and name.endswith('有效投注'):
-                address_lottery.append(ip)
-            elif name.startswith('捕鱼机') and name.endswith('有效投注'):
+            elif '捕鱼' in name and name.endswith('有效总投注'):
+                # print('捕鱼:  %s' % name)
                 address_fishing.append(ip)
-            elif name.startswith('棋牌游戏') and name.endswith('有效投注'):
+            elif '棋牌' in name and name.endswith('有效总投注'):
+                # print('棋牌:  %s' % name)
                 address_poker.append(ip)
+            elif ('分彩' in name or '快开' in name or 'Keno' in name or '11选5' in name or '彩票' in name
+                  or '时时' in name or 'VR' in name) and name.endswith('有效总投注'):
+                # print('彩票:  %s' % name)
+                address_lottery.append(ip)
+            elif name.endswith('有效总投注') and ip > 2:
+                # print('老虎机:  %s' % name)
+                address_slot.append(ip)
             ip += 1
         temp_row = 0
         y1 = len(rows)
@@ -426,8 +441,8 @@ def admin_view(request):
             user = User()
             user.proxy = all_data[0].firstChild.data
             user.user_name = all_data[1].firstChild.data
-            user.capital_flow = all_data[3].firstChild.data
-            user.capital_return = all_data[4].firstChild.data
+            user.capital_flow = all_data[2].firstChild.data
+            user.capital_return = all_data[3].firstChild.data
 
             # 数据处理
             data_temp = 0
@@ -455,11 +470,24 @@ def admin_view(request):
             num_progress = float(cache.get('progress'))
             num_progress += y2
             cache.set("progress", num_progress)
-
+        now = datetime.datetime.now()
+        # all_user_data = Points.objects.all()
+        all_user_data = DataIndexPage.objects.values('user', 'proxy').distinct()
+        z3 = 40 / len(all_user_data)
+        with transaction.atomic():
+            for user in all_user_data:
+                # print('user data % deal' % user['user'])
+                flush_month_data(user['user'], user['proxy'])
+                flush_half_data(user['user'], user['proxy'])
+                flush_year_data(user['user'], user['proxy'])
+                flush_points_analysis(user['user'])
+                num_progress = float(cache.get('progress'))
+                num_progress += z3
+                cache.set("progress", num_progress)
     except Exception as e:
         traceback.print_exc(e)
         message = {
-            'result': '文件 %s 错误，请检查数据文件 %s' % (other_name, e),
+            'result': 'file %s error %s' % (other_name, e),
             'status': 0,
         }
         return JsonResponse(message)

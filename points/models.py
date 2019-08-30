@@ -38,7 +38,7 @@ class Points(models.Model):
 
     def 剩余积分(self):
         # 获取积分配置信息
-        self.orders = Orders.objects.filter(user_name=self.user_name).order_by('update_time')
+        self.orders = Orders.objects.filter(user_name=self.user_name)
         points = self.总积分()
         cost = 0
         for line in self.orders:
@@ -128,23 +128,24 @@ class Points(models.Model):
         return add_points - self.one_year_lottery
 
 
-class Cost(models.Model):
-    """
-    积分 消费情况
-    """
-    user_name = models.CharField(max_length=255, help_text='用户名')
-    goods = models.CharField(max_length=255, help_text='消费商品')
-    goods_id = models.IntegerField(help_text='消费商品ID')
-    change_points = models.IntegerField()
-    tips = models.CharField(max_length=255, help_text='积分加减备注')
-    update_time = models.TimeField(auto_now=True)
-
-    panels = [
-        FieldPanel('user_name'),
-        FieldPanel('change_points'),
-        FieldPanel('goods'),
-        FieldPanel('tips'),
-    ]
+# class Cost(models.Model):
+#     """
+#     积分 消费情况
+#     """
+#     user_name = models.CharField(max_length=255, help_text='用户名')
+#     goods = models.CharField(max_length=255, help_text='消费商品')
+#     goods_id = models.IntegerField(help_text='消费商品ID')
+#     change_points = models.IntegerField()
+#     tips = models.CharField(max_length=255, help_text='积分加减备注')
+#     update_time = models.TimeField(auto_now=True)
+#
+#     panels = [
+#         FieldPanel('user_name'),
+#         FieldPanel('change_points'),
+#         FieldPanel('goods'),
+#         FieldPanel('goods_id'),
+#         FieldPanel('tips'),
+#     ]
 
 
 class Add(models.Model):

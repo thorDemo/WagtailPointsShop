@@ -2,9 +2,10 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from orders.models import Orders
-from points.models import Points, Cost
+# from points.models import Points, Cost
+from points.models import Points
 from django.shortcuts import redirect
-from mulu.models import GoodsPage
+from mulu.models import GoodsPage, LimitBargainsPage
 # from django.contrib import messages
 
 
@@ -16,7 +17,7 @@ def new_order(request):
     except Exception:
         address = '虚拟商品不写地址'
     # 添加订单
-    #try:
+
     order = Orders(
         take_name=data['Name'],
         user_name=request.user.username,
@@ -25,7 +26,7 @@ def new_order(request):
         email=data['Email'],
         phone=data['Phone'],
         wechart=data['WeChart'],
-        address=data['Address'],
+        address=address,
         discount=data['Discount'],
         real_cost=data['Real'],
         image_id=int(data['Image']),
@@ -33,17 +34,15 @@ def new_order(request):
         cost=data['Cost'],
         status=0,
     )
-        # 积分 消费
-        #print(data)
-    cost = Cost(
-    user_name=request.user.username,
-        goods=data['Goods'],
-        goods_id=data['GoodsID'],
-        change_points=(int(data['Cost']) * -1),
-        tips='礼品兑换',
-    )
+    # # 积分 消费
+    # cost = Cost(
+    #     user_name=request.user.username,
+    #     goods=data['Goods'],
+    #     goods_id=data['GoodsID'],
+    #     change_points=(int(data['Cost']) * -1),
+    #     tips='礼品兑换',
+    # )
     order.save()
-    cost.save()
-    #except Exception:
-    #    return
+    # cost.save()
+
     return redirect('/accounts/')

@@ -20,16 +20,25 @@ class Orders(models.Model):
     real_cost = models.IntegerField(help_text='商品需要积分')
     status_choices = (('0', '待确认'), ('1', '待发货'), ('2', '配送中'), ('3', '已送达'), ('4', '已取消'), ('5', '不符合'))
     status = models.CharField(max_length=255, choices=status_choices, default='0', help_text='订单状态')
-    update_time = models.DateField(auto_now=True)
-    create_time = models.DateField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
+    create_time = models.DateTimeField(auto_now_add=True)
 
     panels = [
         MultiFieldPanel([
             FieldPanel('take_name', classname='col12'),
+            FieldPanel('user_name', classname='col12'),
+            FieldPanel('goods', classname='col12'),
+            FieldPanel('goods_id', classname='col12'),
+            FieldPanel('image', classname='col12'),
+            FieldPanel('email', classname='col12'),
             FieldPanel('phone', classname='col12'),
             FieldPanel('wechart', classname='col12'),
-            FieldPanel('email', classname='col12'),
             FieldPanel('address', classname='col12'),
+            FieldPanel('tips', classname='col12'),
+            FieldPanel('cost', classname='col12'),
+            FieldPanel('discount', classname='col12'),
+            FieldPanel('discount', classname='col12'),
+            FieldPanel('real_cost', classname='col12'),
             FieldPanel('status', classname='col12'),
         ],  '订单信息修改')
     ]

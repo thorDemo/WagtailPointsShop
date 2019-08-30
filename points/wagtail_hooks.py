@@ -1,18 +1,19 @@
 from wagtail.contrib.modeladmin.options import (
     ModelAdmin, modeladmin_register, ModelAdminGroup)
-from .models import (Cost, Points, Add, PointConfig)
+# from .models import (Cost, Points, Add, PointConfig)
+from .models import (Points, Add, PointConfig)
 
 
-class CostAdmin(ModelAdmin):
-    model = Cost
-    menu_label = '消费管理'
-    menu_icon = 'list-ol'
-    # menu_order = 1000
-    # add_to_settings_menu = False
-    # exclude_from_explorer = False
-    list_display = ('user_name', 'goods', 'change_points', 'tips', 'update_time')
-    list_filter = ('user_name',)
-    search_fields = ('user_name', 'change_points')
+# class CostAdmin(ModelAdmin):
+#     model = Cost
+#     menu_label = '消费管理'
+#     menu_icon = 'list-ol'
+#     # menu_order = 1000
+#     # add_to_settings_menu = False
+#     # exclude_from_explorer = False
+#     list_display = ('user_name', 'goods', 'change_points', 'tips', 'update_time')
+#     list_filter = ('user_name',)
+#     search_fields = ('user_name', 'change_points')
 
 
 class PointsAdmin(ModelAdmin):
@@ -71,7 +72,8 @@ class LibraryGroup(ModelAdminGroup):
     menu_label = '积分'
     menu_icon = 'folder-open-inverse'  # change as required
     menu_order = 200  # will put in 3rd place (000 being 1st, 100 2nd)
-    items = (CostAdmin, PointsAdmin, AddAdmin, Config)
+    # items = (CostAdmin, PointsAdmin, AddAdmin, Config)
+    items = (PointsAdmin, AddAdmin, Config)
 
 
 modeladmin_register(LibraryGroup)

@@ -50,8 +50,10 @@
             <!--左侧表单填写-->
             <div class="form-left">
                 <form action="/order/" method="post" >
-				{% csrf_token %}
-				<input type="text" name="Goods" value="{{ page.title }}" title="" style="display: none">
+	             {% if message is None%}
+			{% csrf_token %}
+                     {% endif %}
+		    <input type="text" name="Goods" value="{{ page.title }}" title="" style="display: none">
                     <input type="text" name="GoodsID" value="{{ page.id }}" title="" style="display: none">
                     <input type="text" name="Real" value="{{ page.points }}" title="" style="display: none">
                     <input type="text" name="Image" value="{{ page.image_id }}" title="" style="display: none">

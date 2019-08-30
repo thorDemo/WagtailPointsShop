@@ -1,11 +1,11 @@
 from django.db import models
 from wagtail.contrib.forms.models import AbstractForm, AbstractFormField
 from modelcluster.fields import ParentalKey
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, InvalidPage
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 from wagtail.core.models import Page, Orderable
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
+from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from points.models import Points, PointConfig, Add
@@ -14,6 +14,10 @@ from viplist.models import VipList, VipSetting
 from wagtail.core.fields import RichTextField
 import requests
 import datetime
+from promotion.models import PromotionSetting
+from pytz.reference import Eastern
+from dateutil import tz
+from data.models import DataIndexPage
 
 
 class GoodsPageTag(TaggedItemBase):
@@ -166,11 +170,9 @@ class GoodsPage(Page):
         # 查询用户的所有订单
         self.orders = Orders.objects.filter(user_name=request.user.username).order_by('update_time')
         # 查询用户今天创建了多少订单
-        now = datetime.datetime.now()
-        dela = datetime.timedelta(days=-1)
-        yesterday = now + dela
-        n_days = datetime.datetime.strptime(yesterday.strftime('%Y-%m-%d'), '%Y-%m-%d')
-        self.today_order = Orders.objects.filter(user_name=self.user_name).filter(create_time__gt=n_days).exclude(status='4').exclude(status='5')
+        now = datetime.datetime.now(tz=Eastern)
+        start = datetime.datetime(now.year, now.month, now.day, tzinfo=Eastern)
+        self.today_order = Orders.objects.filter(user_name=self.user_name).filter(create_time__gt=start).exclude(status='4').exclude(status='5')
         # 查询用户等级 打多少折扣
         level, discount = self._user_level()
 
@@ -245,6 +247,338 @@ class GoodsPage(Page):
     ]
 
 
+class LimitBargainsSortPage(Page):
+    parent_page_types = ['mulu.MuluIndexPage']
+    date = models.DateField("Post date", help_text='发布日期')
+    image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='栏目背景图'
+    )
+    home_image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='首页封面图片'
+    )
+
+    def get_context(self, request, *args, **kwargs):
+        self.setting = PromotionSetting.objects.all()[0]
+        context = super().get_context(request)
+        # 获取栏目
+        brother = self.get_siblings()
+        context['brother'] = brother
+        farther = self.get_parent()
+        parents = farther.get_siblings().live()
+        context['farther'] = farther
+        context['parents'] = parents
+        context['query_time'] = self.query_time()
+        #
+        goodspages = self.get_children().live().order_by('-first_published_at')
+        paginator = Paginator(goodspages, 20)  # Show 3 resources per page
+        try:
+            page = request.GET.get('page')
+            if page == 1:
+                context['num'] = 1
+            else:
+                context['num'] = int(page) + 1
+            goodspages = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            goodspages = paginator.page(1)
+            context['num'] = 0
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            goodspages = paginator.page(paginator.num_pages)
+            context['num'] = paginator.num_pages + 1
+        except TypeError:
+            goodspages = paginator.page(1)
+            context['num'] = 1
+        # make the variable 'resources' available on the templates
+        context['goodspages'] = goodspages
+        return context
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel([
+            FieldPanel('date'),
+            ImageChooserPanel('image'),
+            ImageChooserPanel('home_image'),
+        ], heading="分类信息"),
+    ]
+
+    def query_time(self):
+        # 已兼容
+        cn = tz.gettz('Asia/Shanghai')
+        now = datetime.datetime.now(tz=cn)
+        self.config = PromotionSetting.objects.all()[0]
+        first = datetime.datetime(
+            datetime.datetime.now().year,
+            datetime.datetime.now().month,
+            datetime.datetime.now().day,
+            int(self.config.set_first_time),
+            0,
+            tzinfo=cn
+        )
+        second = datetime.datetime(
+            datetime.datetime.now().year,
+            datetime.datetime.now().month,
+            datetime.datetime.now().day,
+            int(self.config.set_second_time),
+            0,
+            tzinfo=cn
+        )
+        third = datetime.datetime(
+            datetime.datetime.now().year,
+            datetime.datetime.now().month,
+            datetime.datetime.now().day,
+            int(self.config.set_third_time),
+            0,
+            tzinfo=cn
+        )
+        if 0 < (now - first).seconds < 3600:
+            return 1
+        elif 0 < (now - second).seconds < 3600:
+            return 1
+        elif 0 < (now - third).seconds < 3600:
+            return 1
+        else:
+            return 0
+
+
+class LimitBargainsPage(Page):
+    parent_page_types = ['mulu.LimitBargainsSortPage']
+    date = models.DateField("Post date", help_text='发布日期')
+    description = models.CharField(max_length=250, help_text='商品描述')
+    count = models.IntegerField(default=100, help_text='实际数量限制')
+    fake_count = models.IntegerField(default=10, help_text='页面展示假数量')
+    capital = models.IntegerField(default=288, help_text='存款限制')
+    points = models.IntegerField(help_text='折扣价')
+    discount = models.FloatField(help_text='折扣比例')
+    introduce = RichTextField(blank=True, help_text='商品详细介绍')
+
+    image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='商品展示图片'
+    )
+
+    def get_context(self, request, *args, **kwargs):
+        self.user_name = request.user.username
+        now = datetime.datetime.now(tz=Eastern)
+        start = datetime.datetime(now.year, now.month, now.day, tzinfo=Eastern)
+        context = super().get_context(request)
+        # 获取栏目
+        small_list = self.get_parent()
+        big_list = small_list.get_parent()
+        parents = big_list.get_siblings()
+        brother = small_list.get_siblings()
+        context['parents'] = parents
+        context['brother'] = brother
+        context['original_points'] = int(self.points / self.discount)
+        self.orders = Orders.objects.filter(user_name=self.user_name).filter(goods_id=self.id)
+        current_orders = Orders.objects.filter(user_name=self.user_name). \
+            filter(create_time__gte=start).filter(goods_id__gte=290).\
+            exclude(status='4').exclude(status='5')
+        if len(current_orders) > 0:
+            context['message'] = '对不起今天你已经参与过活动了！不能重复参与！'
+            return context
+        if self.surplus_count() <= 0:
+            context['message'] = '对不起商品已经抢购一空了！请下次抓紧时间！'
+            return context
+        if self.check_time() == 0:
+            context['message'] = '对不起！现在还未到活动时间！请耐心等待！'
+            return context
+        if self.query_capital() < self.capital:
+            context['message'] = '对不起！您昨日流水不足！请今天加倍努力！'
+            return context
+        return context
+
+    def surplus_count(self):
+        # 已兼容
+        cn = tz.gettz('Asia/Shanghai')
+        now = datetime.datetime.now(tz=cn)
+        self.config = PromotionSetting.objects.all()[0]
+        first = datetime.datetime(
+            datetime.datetime.now().year,
+            datetime.datetime.now().month,
+            datetime.datetime.now().day,
+            int(self.config.set_first_time),
+            0,
+            tzinfo=cn
+        )
+        second = datetime.datetime(
+            datetime.datetime.now().year,
+            datetime.datetime.now().month,
+            datetime.datetime.now().day,
+            int(self.config.set_second_time),
+            0,
+            tzinfo=cn
+        )
+        third = datetime.datetime(
+            datetime.datetime.now().year,
+            datetime.datetime.now().month,
+            datetime.datetime.now().day,
+            int(self.config.set_third_time),
+            0,
+            tzinfo=cn
+        )
+        if 0 < (now - first).seconds < 3600:
+            num = len(Orders.objects.filter(goods_id__exact=self.id).filter(create_time__gte=first).filter(
+                create_time__lte=first + datetime.timedelta(hours=1)
+            ).exclude(status='4').exclude(status='5')
+            )
+        elif 0 < (now - second).seconds < 3600:
+            num = len(Orders.objects.filter(goods_id__exact=self.id).filter(create_time__gte=second).filter(
+                create_time__lte=second + datetime.timedelta(hours=1)
+            ).exclude(status='4').exclude(status='5')
+            )
+        elif 0 < (now - third).seconds < 3600:
+            num = len(Orders.objects.filter(goods_id__exact=self.id).filter(create_time__gte=third).filter(
+                create_time__lte=third + datetime.timedelta(hours=1)
+            ).exclude(status='4').exclude(status='5')
+            )
+        else:
+            num = 0
+        # num = 31
+        fake_num_all = int(self.fake_count/3 - num/(self.count/3) * (self.fake_count/3))
+        # print(num/(self.count/3) * (self.fake_count/3))
+        if fake_num_all < (self.fake_count/3)/(self.count/3):
+            return 0
+        else:
+            return fake_num_all
+
+    def query_deposit(self):
+        url = 'https://bm168.bm168168.com/agv3/cl/?module=CashSystem&method=queryProject&sid='
+        header = {
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'Connection': 'keep-alive',
+            'Content-Length': '1072',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Cookie': self.config.set_cookies,
+            'Host': 'bm168.bm168168.com',
+            'Origin': 'https://bm168.bm168168.com',
+            'Referer': 'https://bm168.bm168168.com/agv3/cl/index.php?module=CashSystem',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
+                          ' Chrome/75.0.3770.142 Safari/537.36',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+        now = datetime.datetime.now(tz=Eastern)
+        start = datetime.datetime(now.year, now.month, now.day - 1, 0, 0, 0)
+        end = datetime.datetime(now.year, now.month, now.day - 1, 23, 59, 59)
+        data = {
+            'current': 'RMB',
+            'sDate': start,
+            'eDate': end,
+            'MemNameSel': 'single',
+            # 'mem_name': 'lanlan698',
+            'mem_name': self.user_name,
+            'betNum': '',
+            'page': '',
+            'Sort': '1',
+            'm': '',
+            'cid': '1,3,7,9,12,5,16',
+        }
+        response = requests.post(url, data=data, headers=header)
+        all_deposit = 0
+        try:
+            req = response.json()
+            for line in req['ARR_WDATA']:
+                print(line['MEM_GOLD'])
+                all_deposit += float(str(line['MEM_GOLD']).replace(',', ''))
+            return all_deposit
+        except ValueError:
+            print('not have anything !')
+            return 0
+        except KeyError:
+            print('not have anything !')
+            return 0
+
+    def query_capital(self):
+        """
+        查询昨天的流水
+        :return:
+        """
+        now = datetime.datetime.now(tz=Eastern)
+        yesterday = now - datetime.timedelta(days=1)
+        data = DataIndexPage.objects.filter(user__exact=self.user_name).filter(
+            date__gte=datetime.datetime(yesterday.year, yesterday.month, yesterday.day)
+        )
+        if len(data) == 0:
+            return 0
+        else:
+            capital = data[0].capital_flow - data[0].lottery
+            print(capital)
+            return capital
+
+    def check_time(self):
+        # 已兼容
+        cn = tz.gettz('Asia/Shanghai')
+        now = datetime.datetime.now(tz=cn)
+        self.config = PromotionSetting.objects.all()[0]
+        first = datetime.datetime(
+            datetime.datetime.now().year,
+            datetime.datetime.now().month,
+            datetime.datetime.now().day,
+            int(self.config.set_first_time),
+            0,
+            tzinfo=cn
+        )
+        second = datetime.datetime(
+            datetime.datetime.now().year,
+            datetime.datetime.now().month,
+            datetime.datetime.now().day,
+            int(self.config.set_second_time),
+            0,
+            tzinfo=cn
+        )
+        third = datetime.datetime(
+            datetime.datetime.now().year,
+            datetime.datetime.now().month,
+            datetime.datetime.now().day,
+            int(self.config.set_third_time),
+            0,
+            tzinfo=cn
+        )
+
+        if 0 < (now - first).seconds < 3600:
+            return 1
+        elif 0 < (now - second).seconds < 3600:
+            return 1
+        elif 0 < (now - third).seconds < 3600:
+            return 1
+        else:
+            return 0
+
+    search_fields = Page.search_fields + [
+        index.SearchField('description'),
+        index.SearchField('image'),
+    ]
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel([
+            FieldPanel('date'),
+            FieldPanel('description'),
+            FieldPanel('count'),
+            FieldPanel('fake_count'),
+            FieldPanel('capital'),
+            FieldPanel('points'),
+            FieldPanel('discount'),
+            FieldPanel('introduce'),
+        ], heading="商品信息"),
+        ImageChooserPanel('image'),
+    ]
+
+
 class BargainsPage(Page):
     parent_page_types = ['mulu.GoodsSortPage']
     date = models.DateField("Post date", help_text='发布日期')
@@ -310,7 +644,7 @@ class BargainsPage(Page):
             return int(float(user_data['res'][0]['effbet']) / 400)
         except IndexError:
             return 0
-        except Exception:
+        except KeyError:
             return 0
 
     search_fields = Page.search_fields + [
@@ -328,4 +662,3 @@ class BargainsPage(Page):
             ], heading="商品信息"),
             ImageChooserPanel('image'),
         ]
-

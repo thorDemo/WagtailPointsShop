@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailuserbar %}
+
+{% block type_list %}
+    <a href="/">首页</a>
+    {% for post in parents %}
+        {% if post.title == '礼品目录' %}
+            <a href="{% pageurl post %}" class="active">{{ post.title }}</a>
+        {% else %}
+            <a href="{% pageurl post %}">{{ post.title }}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/half.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="change-detail-1">
+        <!--表单顶部标题-->
+        <div style="text-align:center;margin: 0 auto;padding:20px 0"><img src="{% static 'images/title.png' %}" alt=""/></div>
+        <!--兑换信息说明-->
+        <div class="change-text-1">
+            <!--左边商品图展示-->
+            {% image page.image width-400 as tmp_photo %}
+            <img src="{{ tmp_photo.url }}" alt="{{ tmp_photo.alt }}" style="width: 400px;height: 400px;float: left;"/>
+            <!--右边商品详情和温馨提示-->
+            <div class="change-text-right-1">
+                <div class="change-text-right1-1">
+                    <img src="{% static 'picture/ct_icon.png' %}" alt="" style="float: left"/>
+                    <p style="font-size: 15px;font-weight: bolder;vertical-align: middle">&nbsp;&nbsp;您要兑换的商品是</p>
+                    <p style="margin: 13px 0 13px 0;font-weight: bolder;font-size: 23px">{{ page.title }}</p>
+                    <div style="padding-bottom: 10px">
+                        <span style="font-size: 15px;font-weight: bolder;vertical-align: middle">商品积分：{{ original_points }}</span>
+                        <span style="font-size: 15px;font-weight: bolder;vertical-align: middle">&nbsp;&nbsp;&nbsp;折扣价:</span>
+                        <span style="color: red;font-size: 15px;font-weight: bolder;vertical-align: middle">{{ page.points }}</span>
+                        <span style="color: red;font-size: 15px;vertical-align: middle">({{ page.discount }})</span>
+                    </div>
+                    <p style="color: red">{{ message }}</p>
+                    <div>
+                        <p>1. 商城将在每天中午14:00-15:00，下午18:00-19:00，晚上21:00-22:00，分3次开放抢购名额，前一天已达到相应参与要求的会员，可在该时段内抢购奖品，抢完即止；</p>
+                        <p>2. 每位会员每天只能领取1次奖品（含筹码），共有3次抢购机会，若会员已抢购成功则禁止重复参与；</p>
+                        <p>3. 该活动要求的存款额不得参与任何存送优惠，当天所有的存款额叠加后达到活动要求，即可参与第二天的抢购活动；</p>
+                        <p>4. 若会员前一天未达到对应奖品的参与要求，则抢购的奖品（含筹码）均视为无效； 例：会员昨日流水2888元，则只可参与18元筹码的抢购活动，抢购其余任何奖品均视为无效</p>
+                        <p>5. 活动流水将扣除注彩票游戏，任何彩票投注将不计算在内。</p>
+                        <p>6. 成功抢购到筹码的会员，经审核通过后，筹码将直接派发到会员账户；成功抢购到奖品的会员，经审核通过后，将收到宝马会的通知。</p>
+                    </div>
+                    <!--<a class="zxkf-1" href="https://bmw-chat-service.com/?wgPortal=VONFpjLZtk" target="_blank">在线客服</a>-->
+                    <!--<a class="cjyw-1" href="http://www.bmw1984.com/yiwen/" target="_blank">常见疑问</a>-->
+                </div>
+            </div>
+        </div>
+	<div>
+            {{ page.introduce|richtext }}
+        </div>
+        <!--填写表单-->
+        <div class="change-sub">
+
+             <!--左侧表单填写-->
+            <div class="form-left">
+                <form action="/order/" method="post" >
+		    {% if message is None%}
+			{% csrf_token %}
+                    {% endif %}
+		    <input type="text" name="Goods" value="{{ page.title }}" title="" style="display: none">
+                    <input type="text" name="GoodsID" value="{{ page.id }}" title="" style="display: none">
+                    <input type="text" name="Real" value="{{ original_points }}" title="" style="display: none">
+                    <input type="text" name="Image" value="{{ page.image_id }}" title="" style="display: none">
+                    <input type="text" name="Discount" value="{{ page.discount }}" title="" style="display: none">
+                    <input type="text" name="Cost" value="{{ page.points }}" title="" style="display: none">
+                    <div style="float: right"><p class="warnuser">*</p><p style="color: #ffffff">为必填</p></div>
+                    <div style="padding-top: 40px;margin-bottom: 10px;width: 530px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 60px">姓 名</p><input type="text" placeholder="请输入姓名" name="Name" id="f1" class="un" required/>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 45px">用 户 名</p><input type="text" placeholder="{{ user.username }}" name="" readonly="readonly" id="f2" required/>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 60px">邮 箱</p><input type="email" value="{{ user.username }}@bmw1984.com" readonly="readonly" name="Email" id="f3" required/>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 60px">电 话</p><input type="text" placeholder="请输入电话" name="Phone" id="f4" pattern="[0-9]{11}" title="请输入11位数的手机号码" required/>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 45px">微 信 号</p><input type="text" placeholder="请输入微信号" name="WeChart" id="f5" required/>
+                    </div>
+                    <div style="margin-bottom: 10px">
+                        <p class="warnuser" style="padding-right: 22px">*</p>
+                        <p style="color: #fec45d;padding-right: 40px">邮寄地址</p><input type="text" placeholder="虚拟商品不写地址" name="Address" id="f6"/>
+                    </div>
+                    <div style="margin-bottom: 10px;height: 100px">
+                        <p class="warnuser" style="padding-right: 29px"></p>
+                        <p style="color: #fec45d;padding-right: 60px;display:inline-block;vertical-align:middle;margin-bottom: 90px">备 注</p>
+                        <textarea class="form-size" name="Tips" id="" cols="30" rows="10" placeholder="如有额外说明，请填写"></textarea>
+                    </div>
+                    <div class="form-bt">
+                    	{% if message %}
+                            <button type="" disabled="disabled">提交</button><button type="reset">清除</button>
+                        {% else %}
+                            <button type="submit">提交</button><button type="reset">清除</button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+            <!--右侧大图-->
+            <div class="form-right"><img src="{% static 'images/banner.jpg' %}" alt="" style="width: 270px"/></div>
+        </div>
+    </div>
+
+
+{% endblock %}

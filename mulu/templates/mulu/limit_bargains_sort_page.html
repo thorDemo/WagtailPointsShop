@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% load static wagtailuserbar %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bmw.css' %}">
+{% endblock %}
+
+{% block type_list %}
+    <a href="/">首页</a>
+    {% for post in parents.live %}
+        {% if self.title == post.title %}
+            <a href="{% pageurl post %}" class="active">{{ post.title }}</a>
+        {% else %}
+            <a href="{% pageurl post %}">{{ post.title }}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <!-- 设置背景图 -->
+    <section>
+        <!-- 礼品分类导航栏 start -->
+        <div class="nav">
+            <div class="pronav">
+                <ul>
+                    <li class="nav-class">
+                        <a href="{% pageurl farther %}">
+                            {% image farther.specific.image width-400 as photo %}
+                            <img src="{{ photo.url }}" alt="{{ photo.alt }}">
+                            <p>&nbsp;&nbsp;&nbsp;首页&nbsp;&nbsp;&nbsp;</p>
+                        </a>
+                        {% for post in brother %}
+                            {% with post=post.specific %}
+                                <li class="nav-class">
+                                    <a href="{% pageurl post %}">
+                                        {% image post.image width-400 as tmp_photo %}
+                                        <img src="{{ tmp_photo.url }}" alt="{{ tmp_photo.alt }}">
+                                        <p>{{ post.title }}</p>
+                                    </a>
+                                </li>
+                            {% endwith %}
+                        {% endfor %}
+
+                </ul>
+            </div>
+        </div>
+
+    <!--限时秒杀倒计时活动start-->
+        <div class="jd_secKill_left">
+            <span class="ms_icon">宝马会限时秒杀</span>
+            <div class="ms_time fl">
+                {% if query_time %}
+                    <span class="ms_text">距结束</span>
+                    <span class="num fl">0</span>
+                    <span class="num fl">0</span>
+                    <span class="str fl">:</span>
+                    <span class="num fl">0</span>
+                    <span class="num fl">0</span>
+                    <span class="str fl">:</span>
+                    <span class="num fl">0</span>
+                    <span class="num fl">0</span>
+                {% else %}
+                    <span class="ms_text">当前活动已结束！！</span>
+                {% endif %}
+
+                <span class="ms_text1">下次活动开始于北京时间 13:00:00</span>
+            </div>
+        </div>
+        <!--限时秒杀倒计时活动end-->
+        <script>
+            $.ajax({
+                'url': '/limit/time_query/',
+                'dataType': 'json',
+                success: function (data) {
+                    /*复盒子*/
+                    let parentTime = document.getElementsByClassName('ms_time')[0];
+                    /*span时间*/
+                    let timeList = parentTime.getElementsByClassName('num');
+                    let ms_text1 = document.getElementsByClassName('ms_text1')[0];
+                    console.log(data);
+                    ms_text1.innerHTML = data['message'];
+                    if(data['time'] === 0){
+                        timeList[0].innerHTML = 0;
+                        timeList[1].innerHTML = 0;
+                        timeList[2].innerHTML = 0;
+                        timeList[3].innerHTML = 0;
+                        timeList[4].innerHTML = 0;
+                        timeList[5].innerHTML = 0;
+                    }
+                    else {
+                        /*秒杀倒计时*/
+                        let secondKill = function() {
+                            console.log(data['time']);
+                            let times = data['time'];
+                            let timer;
+                            timer = setInterval(function () {
+                                times--;
+                                let h = Math.floor(times / (60 * 60));
+                                let m = Math.floor(times / 60 % 60);
+                                let s = times % 60;
+                                {#console.log(h + '-' + m + "-" + s);#}
+                                timeList[0].innerHTML = h > 10 ? Math.floor(h / 10) : 0;
+                                timeList[1].innerHTML = h % 10;
+                                timeList[2].innerHTML = m > 10 ? Math.floor(m / 10) : 0;
+                                timeList[3].innerHTML = m % 10;
+                                timeList[4].innerHTML = s > 10 ? Math.floor(s / 10) : 0;
+                                timeList[5].innerHTML = s % 10;
+                                if (times <= 0) {
+                                    clearInterval(timer);
+                                }
+                            }, 1000);
+                        };
+                        secondKill();
+                        }
+                }
+            });
+        </script>
+        <!-- 礼品展示 start -->
+        <div class="mainContent">
+            <div class="product">
+                <ul>
+                    {% for post in goodspages %}
+                        {% with post=post.specific %}
+                            <li class="des">
+                                <a href="#">
+                                    <div class="product-pic">
+                                        <!--上新图标 start -->
+                                        <!-- <div class="new"></div> -->
+                                        <!--上新图标 end-->
+                                        {% image post.image max-270x270 as tmp_photo %}
+                                        <img src="{{ tmp_photo.url }}" alt="{{ tmp_photo.alt }}"/>
+                                    </div>
+                                    <div class="details">
+                                        <ul>
+                                            <li class="product-des">{{ post.title }}</li>
+                                            <li class="product-jifen">积分&nbsp; <b
+                                                    style="font-size: 20px;">{{ post.points }}</b>
+                                            <b style="font-size: 20px;float: right">{{ post.surplus_count }}</b><p style="margin-top: 7px;float: right;">剩余：</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </a>
+                                <div class="dc hide">
+                                    <div style="display:block;width: 176px;height: 230px;background-color: #666;opacity: 0.4;"></div>
+                                    <ul>
+                                        <li class="duihuan"><a href="{{ post.url }}">兑换</a></li>
+                                        <li class="ckxq"><a href="{{ post.url }}">查看详情</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        {% endwith %}
+                    {% endfor %}
+
+                </ul>
+            </div>
+        </div>
+        <!--页码 start-->
+        <div class="yema">
+            <ul>
+                {% if goodspages.has_previous %}
+                    <li><a href="?page={{ goodspages.previous_page_number }}"></a></li>
+                {% endif %}
+                {% for page_num in goodspages.paginator.page_range %}
+                    <li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                {% endfor %}
+                {% if goodspages.has_next %}
+                    <li><a href="?page={{ goodspages.next_page_number }}"></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+    <!--页码 end-->
+    <!-- 礼品展示 end -->
+    <style type="text/css">
+        .yema li:nth-child({{ num }}) {
+            background: url("{% static 'picture/focus.png' %}");
+        }
+
+        {% if goodspages.has_previous %}
+            .yema li:first-child {
+                background: url("{% static 'picture/pre.png' %}");
+            }
+            .yema li:first-child:hover {
+                background: url("{% static 'picture/focus-pre.png' %}");
+            }
+        {% endif %}
+
+        {% if goodspages.has_next %}
+            .yema li:last-child {
+                background: url("{% static 'picture/next.png' %}");
+            }
+            .yema li:last-child:hover {
+                background: url("{% static 'picture/focus-next.png' %}");
+            }
+        {% endif %}
+    </style>
+{% endblock %}
+
+{% block extra_js %}
+    <!-- js 引入 --!>
+{% endblock %}

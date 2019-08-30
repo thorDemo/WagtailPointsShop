@@ -7,6 +7,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 from mulu import make_orders
 from search import views as search_views
 from account.views import logout_view, login_view, form_view
+from promotion.views import submit_query_view
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
@@ -20,6 +21,9 @@ urlpatterns = [
     url(r'^accounts/form/$', form_view),
     url(r'^accounts/login/$', login_view),
     url(r'^accounts/logout/$', logout_view),
+
+    url(r'^limit/time_query/$', submit_query_view),
+
 
 
     # For anything not caught by a more specific rule above, hand over to

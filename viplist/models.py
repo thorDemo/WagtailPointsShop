@@ -1,6 +1,7 @@
 from django.db import models
 from wagtail.core.models import Page, Orderable
 from wagtail.admin.edit_handlers import FieldPanel, FieldRowPanel, MultiFieldPanel
+from data.models import MonthDataStatistic
 # from points.models import PointConfig
 
 
@@ -33,6 +34,22 @@ class VipList(models.Model):
             return '王者会员'
         elif self.shop_level == 6:
             return '特邀会员'
+
+    def month_capital(self):
+        try:
+            data = MonthDataStatistic.objects.filter(user__exact=self.user_id)[0]
+            return data.capital_flow
+        except IndexError:
+            #print(self.user_id)
+            return 0
+
+    def month_lottery(self):
+        try:
+            data = MonthDataStatistic.objects.filter(user__exact=self.user_id)[0]
+            return data.lottery
+        except IndexError:
+            #print(self.user_id)
+            return 0
 
     class Meta:
         db_table = 'vip_list'

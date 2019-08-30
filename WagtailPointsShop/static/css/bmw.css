@@ -5,7 +5,7 @@ a{text-decoration: none;}
 a:hover{text-decoration: none;}
 a:visited{text-decoration: none;}
 input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
-/*��ҳstart*/
+/*首页start*/
 .ssfr {
     float: right;
     padding-left: 15px
@@ -32,7 +32,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 .on {
     background: #bb8a35;
 }
-/*�ֲ�start*/
+/*轮播start*/
 .lunbo{
     position: relative;
     bottom: 30px;
@@ -98,9 +98,9 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 .lunbo-des1{
     padding: 0 15px;
 }
-/*�ֲ�end*/
+/*轮播end*/
 
-/*���ർ����ͼ start*/
+/*分类导航大图 start*/
 .class-pic{
     width: 1000px;
     height: 480px;
@@ -113,14 +113,14 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     float: left;
     margin: 0 0 40px 0;
 }
-/*���ർ����ͼ end*/
+/*分类导航大图 end*/
 
-/************************************************��ҳ end**************************************************/
+/************************************************首页 end**************************************************/
 
 
 
-/*��ƷĿ¼start*/
-/*���ñ���ͼ*/
+/*礼品目录start*/
+/*设置背景图*/
 .bgImg{
     background: url(../images/background.jpg) no-repeat fixed;
     background-size:cover;
@@ -185,8 +185,8 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 .pronav a:hover{
 	text-decoration:none;
 }
-/*******************************************************��ƷĿ¼ҳ end*******************************************************/
-/*��Ʒչʾ�б� start*/
+/*******************************************************礼品目录页 end*******************************************************/
+/*礼品展示列表 start*/
 .mainContent{
     display: -webkit-box;
     margin: 0 auto;
@@ -316,40 +316,40 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     background: -webkit-linear-gradient(#bb8a35, #ffc45d); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#bb8a35, #ffc45d); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#bb8a35, #ffc45d); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#bb8a35, #ffc45d); /* ��׼���﷨ */
+    background: linear-gradient(#bb8a35, #ffc45d); /* 标准的语法 */
 }
 .duihuan:hover{
     background: -webkit-linear-gradient(#bb8a35, #ffdd5d); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#bb8a35, #ffdd5d); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#bb8a35, #ffdd5d); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#bb8a35, #ffdd5d); /* ��׼���﷨ */
+    background: linear-gradient(#bb8a35, #ffdd5d); /* 标准的语法 */
 }
 .duihuan:active{
     background: -webkit-linear-gradient(#ffc45d, #bb8a35); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#ffc45d, #bb8a35); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#ffc45d, #bb8a35); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#ffc45d, #bb8a35); /* ��׼���﷨ */
+    background: linear-gradient(#ffc45d, #bb8a35); /* 标准的语法 */
 }
 .ckxq{
     background: -webkit-linear-gradient(#000000, #525252); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#000000, #525252); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#000000, #525252); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#000000, #525252); /* ��׼���﷨ */
+    background: linear-gradient(#000000, #525252); /* 标准的语法 */
 }
 .ckxq:hover{
     background: -webkit-linear-gradient(#000000, #888888); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#000000, #888888); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#000000, #888888); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#000000, #888888); /* ��׼���﷨ */
+    background: linear-gradient(#000000, #888888); /* 标准的语法 */
 }
 .ckxq:active{
     background: -webkit-linear-gradient(#525252, #000000); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#525252, #000000); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#525252, #000000); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#525252, #000000); /* ��׼���﷨ */
+    background: linear-gradient(#525252, #000000); /* 标准的语法 */
 }
 
-/*ҳ�밴ť star*/
+/*页码按钮 star*/
 .yema{
     height: 40px;
     width: 1000px;
@@ -396,9 +396,82 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 .yema li+li{
     margin-right: 10px;
 }
-/*ҳ�밴ť end*/
-/*****************************************************��Ʒչʾ�б� end**************************************************/
-/************************************************�һ��ύ����� start*************************************************/
+/*限时秒杀 start*/
+.jd_secKill_left {
+    /*float: left;*/
+    margin: 20px auto;
+    width: 1000px;;
+    height: 60px;
+    line-height: 60px;
+    background: url("../images/ms-bg.png") no-repeat;
+}
+.jd_secKill_left .ms_icon {
+    font-family: Microsoft YaHei;
+    float: left;
+    font-size: 23px;
+    font-weight: bold;
+    letter-spacing:5px;
+    color: #fff;
+    margin: -5px 0 0 85px;
+    vertical-align: middle;
+}
+.jd_secKill_left .ms_time{
+    float: left;
+    height: 22px;
+    margin: 14px 0 0 10px;
+    line-height: 22px;
+    font-size: 18px;
+    color: #fff;
+    padding-right: 26px;
+ }
+.jd_secKill_left .ms_text{
+    float: left;
+    margin-right: 10px;
+    margin-left: 40px;
+    line-height: 24px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+.jd_secKill_left .ms_text1{
+    float: left;
+    margin: -3px 0 0 40px;
+    padding-left: 35px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 15px;
+    color: #fff;
+    background: url("../images/ms-countdown.png") no-repeat;
+ }
+.jd_secKill_left .ms_text2{
+    float: left;
+    margin-right: 10px;
+    line-height: 24px;
+    font-size: 15px;
+    color: #fff;
+}
+.jd_secKill_left .ms_time .num{
+    float: left;
+    width: 24px;
+    height: 24px;
+    background: rgba(255,255,255,0.95);
+    font-size: 16px;
+    font-weight: 700;
+    color: #5f0000;
+    border-radius: 2px;
+    text-align: center;
+ }
+.jd_secKill_left .ms_time .str{
+    float: left;
+    margin:0 6px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #303030;
+ }
+
+/*限时秒杀 end*/
+/*****************************************************礼品展示列表 end**************************************************/
+/************************************************兑换提交申请表单 start*************************************************/
 .change-detail{
     width: 1000px;
     height: 1360px;
@@ -414,7 +487,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     background: -webkit-linear-gradient(#000000, #525252); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#000000, #525252); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#000000, #525252); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#45414e, #232323); /* ��׼���﷨ */
+    background: linear-gradient(#45414e, #232323); /* 标准的语法 */
 }
 .change-text-right{
     float: left;
@@ -447,7 +520,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     background: -webkit-linear-gradient(#000000, #525252); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#000000, #525252); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#000000, #525252); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#000000, #525252); /* ��׼���﷨ */
+    background: linear-gradient(#000000, #525252);  /* 标准的语法 */
 }
 .cjyw{
     left: 165px;
@@ -460,7 +533,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     background: -webkit-linear-gradient(#525252, #000000); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#525252, #000000); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#525252, #000000); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#525252, #000000); /* ��׼���﷨ */
+    background: linear-gradient(#525252, #000000);   /* 标准的语法 */
 }
 .form-left{
     float: left;
@@ -520,7 +593,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     background: -webkit-linear-gradient(#ffc45d, #bb8a35 ); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#ffc45d, #bb8a35); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#ffc45d, #bb8a35); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#ffc45d, #bb8a35); /* ��׼���﷨ */
+    background: linear-gradient(#ffc45d, #bb8a35); /* 标准的语法 */
 }
 .form-bt button:first-child:hover{
     display: inline-block;
@@ -530,29 +603,29 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     background: -webkit-linear-gradient(#bb8a35, #ffc45d ); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#bb8a35, #ffc45d); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#bb8a35, #ffc45d); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#bb8a35, #ffc45d); /* ��׼���﷨ */
+    background: linear-gradient(#bb8a35, #ffc45d); /* 标准的语法 */
 }
 .form-bt button:last-child{
     background: -webkit-linear-gradient(#000000, #525252); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#000000, #525252); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#000000, #525252); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#000000, #525252); /* ��׼���﷨ */
+    background: linear-gradient(#000000, #525252); /* 标准的语法 */
 }
 .form-bt button:last-child:hover{
     background: -webkit-linear-gradient(#525252, #000000); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#525252, #000000); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#525252, #000000); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#525252, #000000); /* ��׼���﷨ */
+    background: linear-gradient(#525252, #000000); /* 标准的语法 */
 }
-/************************************************�һ��ύ����� end*************************************************/
-/************************************************�˻����� start*************************************************/
+/************************************************兑换提交申请表单 end*************************************************/
+/************************************************账户中心 start*************************************************/
 
 .zhzx-details{
     width: 1000px;
     height: 800px;
     margin: 0 auto;
 }
-/*�˻��������*/
+/*账户中心左边*/
 .zhzx-left{
     float: left;
     width: 320px;
@@ -560,7 +633,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     background: -webkit-linear-gradient(#45414e, #232323); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#45414e, #232323); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#45414e, #232323); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#45414e, #232323); /* ��׼���﷨ */
+    background: linear-gradient(#45414e, #232323); /* 标准的语法 */
 }
 .zhzx-left-1{
     width: 290px;
@@ -606,7 +679,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 .upgrade p:nth-child(2),.upgrade p:nth-child(4){
     color: #ffffff;
 }
-/*�˻������ұ�*/
+/*账户中心右边*/
 .zhzx-right{
     float: left;
     width: 660px;
@@ -619,7 +692,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     background: -webkit-linear-gradient(#5f0000, #2b0000); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#5f0000, #2b0000); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#5f0000, #2b0000); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#5f0000, #2b0000); /* ��׼���﷨ */
+    background: linear-gradient(#5f0000, #2b0000); /* 标准的语法 */
 }
 .zhzx-right-nav p{
     color: #d8d8d8;
@@ -648,7 +721,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     background: -webkit-linear-gradient(#45414e, #232323); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#45414e, #232323); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#45414e, #232323); /* Firefox 3.6 - 15 */
-    background: linear-gradient(#45414e, #232323); /* ��׼���﷨ */
+    background: linear-gradient(#45414e, #232323); /* 标准的语法 */
 }
 .has-children{
     width: 660px;
@@ -710,7 +783,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
     position: absolute;
     bottom: 0;
 }
-/*�˻�����ҳ��*/
+/*账户中心页码*/
 .subject-yema{
      height: 40px;
      width: 660px;
@@ -752,8 +825,8 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 .subject-yema li+li{
     margin-right: 10px;
 }
-/************************************************�˻����� end*************************************************/
-/***********************************************������ ***************************************************/
+/************************************************账户中心 end*************************************************/
+/***********************************************规则奖励 ***************************************************/
 .rule{
     width: 1000px;
     margin:0 auto
@@ -826,7 +899,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 
 
 
-/****************************************************���ڽ���******************************************************** */
+/****************************************************关于奖励******************************************************** */
 .awardebigllist{
     margin-left: 14px;
     line-height: 28px;
@@ -868,7 +941,7 @@ input:-webkit-autofill { box-shadow: 0 0 0 1000px white inset !important;}
 .awardsmalllist a{
     color:#fec45d ;
 }
-/******************************************���ֶһ��Ǽ�*******************************************/
+/******************************************积分兑换登记*******************************************/
 .changelevel{
     width: 863px;
     height: 828px;
